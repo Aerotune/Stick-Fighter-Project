@@ -31,8 +31,10 @@ class Character::State
   end
   
   def on_hit options
-    state_name = @punch_trigger[options['punch_direction']]
-    set_state state_name if state_name
+    if @punch_trigger
+      state_name = @punch_trigger[options['punch_direction']]
+      set_state state_name if state_name
+    end
   end
   
   def create_punch_hit_box direction

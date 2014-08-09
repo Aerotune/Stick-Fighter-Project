@@ -3,7 +3,7 @@ class Characters::Stick1V2::States::PunchRight < Character::State
   
   def initialize character
     @character = character
-    @sprite = Components::Sprite.new(@character.class.image_resource['punch'].merge 'factor_x' => -1, 'fps' => 33, 'mode' => "forward")
+    @sprite = Components::Sprite.new(@character.class.image_resource['punch'].merge 'factor_x' => -1, 'duration' => 0.35, 'mode' => "forward")
     @components = [
       @sprite
     ]

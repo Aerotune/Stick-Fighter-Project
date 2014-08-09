@@ -8,7 +8,8 @@ class Components::Sprite < Component
     @center_y = options["center_y"]
     @images   = options["images"]
     @factor_x = options["factor_x"] || 1
-    @fps      = options["fps"] || 27
+    @fps      = @images.length.to_f / options["duration"] if options["duration"]
+    @fps    ||= options["fps"]  || 27
     @mode     = options["mode"] || "loop"
     @image    = @images.first
     @index    = 0
