@@ -1,7 +1,6 @@
 require 'gosu'
 #require 'ashton'
 require_relative 'shaders'
-require_relative 'sprite_sheet'
 require_relative 'settings'
 
 Dir[File.join(File.dirname(__FILE__), *%w[app lib *.rb])].each { |file| require file }
