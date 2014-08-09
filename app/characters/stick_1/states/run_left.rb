@@ -31,7 +31,7 @@ class Characters::Stick1::States::RunLeft < Character::State
     end
   end
   
-  def on_hit
+  def on_hit options
     set_state "PunchedLeft"
   end
 end

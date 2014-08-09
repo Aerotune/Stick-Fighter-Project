@@ -7,6 +7,11 @@ class Characters::Stick1V2::States::SlideLeft < Character::State
     @components = [
       @sprite
     ]
+    
+    @punch_trigger = {
+      'left' => "PunchedBehindLeft",
+      'right' => "PunchedFrontLeft"
+    }
   end
   
   def update
@@ -35,9 +40,5 @@ class Characters::Stick1V2::States::SlideLeft < Character::State
   def on_set options
     @next_state = "IdleLeft"
     @sprite.index = 0
-  end
-  
-  def on_hit
-    set_state "PunchedFrontLeft"
   end
 end

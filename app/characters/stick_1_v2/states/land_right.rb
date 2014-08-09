@@ -8,6 +8,11 @@ class Characters::Stick1V2::States::LandRight < Character::State
       @sprite
     ]
     @duration = @sprite.images.length / @sprite.fps.to_f
+    
+    @punch_trigger = {
+      'left' => "PunchedFrontRight",
+      'right' => "PunchedBehindRight"
+    }
   end
   
   def update    
@@ -28,9 +33,6 @@ class Characters::Stick1V2::States::LandRight < Character::State
     @character.x += @vel_x
     #@velocity += @acceleration
     #@character.y += @velocity
-  end
-  
-  def on_hit
   end
   
   def control_down control

@@ -50,7 +50,7 @@ class Characters::Stick1::States::PunchLeft < Character::State
     remove_punch_hit_box
   end
   
-  def on_hit
+  def on_hit options
     set_state "PunchedLeft"
   end
 end

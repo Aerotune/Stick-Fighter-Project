@@ -38,7 +38,7 @@ class Characters::Stick1::States::PunchedRight < Character::State
     @sprite.index = 0
   end
   
-  def on_hit
+  def on_hit options
     set_state "PunchedRight"
   end
 end

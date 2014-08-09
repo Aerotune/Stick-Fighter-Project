@@ -7,6 +7,11 @@ class Characters::Stick1V2::States::PreBlockLeft < Character::State
     @components = [
       @sprite
     ]
+    
+    @punch_trigger = {
+      'left' => "PunchedBehindLeft",
+      'right' => "PunchedFrontLeft"
+    }
   end
   
   def on_set options
@@ -54,12 +59,17 @@ class Characters::Stick1V2::States::PreBlockLeft < Character::State
     end
   end
   
-  def on_hit
+  def on_hit options
     if @sprite.mode == "forward" && @sprite.index > @sprite.images.length/2
-      set_state "BlockLeft"
-      @character.on_hit
+      case options['punch_direction']
+      when 'right'
+        set_state "BlockLeft"
+        @character.on_hit
+      when 'left'
+        set_state 'PunchedBehindLeft'
+      end      
     else
-      set_state "PunchedFrontLeft"
+      super(options)
     end
   end
 end

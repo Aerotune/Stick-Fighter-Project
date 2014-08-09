@@ -9,6 +9,11 @@ class Characters::Stick1V2::States::JumpRight < Character::State
     ]
     @duration = @sprite.images.length / @sprite.fps.to_f
     @vel_x = 0
+    
+    @punch_trigger = {
+      'left' => "PunchedFrontRight",
+      'right' => "PunchedBehindRight"
+    }
   end
   
   def update
@@ -26,9 +31,6 @@ class Characters::Stick1V2::States::JumpRight < Character::State
     @character.x += @vel_x
     #@velocity += @acceleration
     #@character.y += @velocity
-  end
-  
-  def on_hit
   end
   
   def on_set options

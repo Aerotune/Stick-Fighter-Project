@@ -37,7 +37,7 @@ class Characters::Stick1::States::SlideLeft < Character::State
     @sprite.index = 0
   end
   
-  def on_hit
+  def on_hit options
     set_state "PunchedLeft"
   end
 end

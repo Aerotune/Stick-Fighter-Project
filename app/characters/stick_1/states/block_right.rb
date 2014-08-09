@@ -40,7 +40,7 @@ class Characters::Stick1::States::BlockRight < Character::State
     end
   end
   
-  def on_hit
+  def on_hit options
     @sprite.index = 1
     @sprite.fps = 37
     @character.x -= 2

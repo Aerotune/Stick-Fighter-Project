@@ -54,12 +54,17 @@ class Characters::Stick1V2::States::PreBlockRight < Character::State
     end
   end
   
-  def on_hit
+  def on_hit options
     if @sprite.mode == "forward" && @sprite.index > @sprite.images.length/2
-      set_state "BlockRight"
-      @character.on_hit
+      case options['punch_direction']
+      when 'left'
+        set_state "BlockRight"
+        @character.on_hit
+      when 'left'
+        set_state 'PunchedBehindRight'
+      end      
     else
-      set_state "PunchedFrontRight"
+      super(options)
     end
   end
 end

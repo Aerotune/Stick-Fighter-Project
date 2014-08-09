@@ -47,7 +47,7 @@ class Characters::Stick1::States::InAirLeft < Character::State
     end
   end
   
-  def on_hit
+  def on_hit options
   end
   
   def on_set options

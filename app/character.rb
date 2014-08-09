@@ -68,8 +68,8 @@ class Character
     @current_state.control_up control
   end
   
-  def on_hit
-    @current_state.on_hit
+  def on_hit options
+    @current_state.on_hit options
   end
   
   def set_state state_name, options={}

@@ -18,7 +18,7 @@ module Systems::HitTest
         entity_manager.each_entity_with_component Components::HitBox do |hit_box_entity, hit_box|
           next if hit_box_entity == punching_entity
           if boxes_hit? punch_hit_box, hit_box
-            $characters[hit_box_entity].on_hit
+            $characters[hit_box_entity].on_hit 'punch_direction' => punch_hit_box.punch_direction
           end
         end
       end

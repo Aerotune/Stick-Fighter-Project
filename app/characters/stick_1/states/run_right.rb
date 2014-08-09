@@ -31,7 +31,7 @@ class Characters::Stick1::States::RunRight < Character::State
     end
   end
   
-  def on_hit
+  def on_hit options
     set_state "PunchedRight"
   end
 end

@@ -15,9 +15,10 @@ class Characters::Stick1V2::States::IdleRight < Character::State
       'attack jab' => "JabRight",
       'block' => "PreBlockRight"
     }
-  end
-  
-  def on_hit
-    set_state "PunchedFrontRight"
+    
+    @punch_trigger = {
+      'left' => "PunchedFrontRight",
+      'right' => "PunchedBehindRight"
+    }
   end
 end

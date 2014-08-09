@@ -54,7 +54,7 @@ class Characters::Stick1::States::PreBlockLeft < Character::State
     end
   end
   
-  def on_hit
+  def on_hit options
     if @sprite.mode == "forward" && @sprite.index > @sprite.images.length/2
       set_state "BlockLeft"
       @character.on_hit

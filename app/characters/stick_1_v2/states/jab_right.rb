@@ -8,6 +8,11 @@ class Characters::Stick1V2::States::JabRight < Character::State
       @sprite
     ]
     @duration = @sprite.images.length / @sprite.fps.to_f
+    
+    @punch_trigger = {
+      'left' => "PunchedFrontRight",
+      'right' => "PunchedBehindRight"
+    }
   end
   
   def update
@@ -47,9 +52,5 @@ class Characters::Stick1V2::States::JabRight < Character::State
   
   def on_unset
     remove_punch_hit_box
-  end
-  
-  def on_hit
-    set_state "PunchedFrontRight"
   end
 end

@@ -28,7 +28,7 @@ class Characters::Stick1::States::JumpLeft < Character::State
     #@character.y += @velocity
   end
   
-  def on_hit
+  def on_hit options
   end
   
   def on_set options

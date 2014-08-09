@@ -40,9 +40,14 @@ class Characters::Stick1V2::States::BlockLeft < Character::State
     end
   end
   
-  def on_hit
-    @sprite.index = 1
-    @sprite.fps = 37
-    @character.x += 2
+  def on_hit options
+    case options['punch_direction']
+    when 'right'
+      @sprite.index = 1
+      @sprite.fps = 37
+      @character.x += 2
+    when 'left'
+      set_state 'PunchedBehindLeft'
+    end
   end
 end

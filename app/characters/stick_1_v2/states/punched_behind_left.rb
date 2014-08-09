@@ -1,17 +1,22 @@
-class Characters::Stick1V2::States::PunchedFrontLeft < Character::State
+class Characters::Stick1V2::States::PunchedBehindLeft < Character::State
   attr_reader :components
   
   def initialize character
     @character = character
-    @sprite = Components::Sprite.new(@character.class.image_resource['punched_front'].merge 'factor_x' => 1, 'fps' => 33, 'mode' => "forward")
+    @sprite = Components::Sprite.new(@character.class.image_resource['punched_behind'].merge 'factor_x' => 1, 'fps' => 33, 'mode' => "forward")
     @components = [
       @sprite
     ]
     @duration = @sprite.images.length / @sprite.fps.to_f
+    
+    @punch_trigger = {
+      'left' => "PunchedBehindLeft",
+      'right' => "PunchedFrontLeft"
+    }
   end
   
   def update
-    @character.x += 0.25
+    @character.x -= 0.25
     if Time.now.to_f - @time_set > @duration
       if controls.control_down? 'move left'
         set_state "RunLeft"
@@ -36,9 +41,5 @@ class Characters::Stick1V2::States::PunchedFrontLeft < Character::State
     @next_state = "IdleLeft"
     @time_set = Time.now.to_f
     @sprite.index = 0
-  end
-  
-  def on_hit
-    set_state "PunchedFrontLeft"
   end
 end
