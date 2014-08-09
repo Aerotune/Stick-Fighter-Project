@@ -2,7 +2,7 @@ require 'gosu'
 require_relative '../sprite_sheet'
 
 # drag sprite to match center point
-# use arrow keys to move center point one pixel
+# use arrow keys to move sprite one pixel
 # Press tab and shift+tab to switch sheet
 # Press S to save
 # Press space to move center point
