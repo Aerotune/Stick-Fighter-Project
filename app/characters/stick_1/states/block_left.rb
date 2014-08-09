@@ -3,7 +3,7 @@ class Characters::Stick1::States::BlockLeft < Character::State
   
   def initialize character
     @character = character
-    @sprite = Components::Sprite.new(@character.class.image_resource['block'].merge factor_x: 1, fps: 0, mode: :forward)
+    @sprite = Components::Sprite.new(@character.class.image_resource['block'].merge 'factor_x' => 1, 'fps' => 0, 'mode' => "forward")
     @components = [
       @sprite
     ]
@@ -21,22 +21,22 @@ class Characters::Stick1::States::BlockLeft < Character::State
   def control_down control
     case control
     when 'move right'
-      set_state :RunRight
+      set_state "RunRight"
     when 'move left'
-      set_state :RunLeft
+      set_state "RunLeft"
     when 'move jump'
-      set_state :JumpLeft
+      set_state "JumpLeft"
     when 'attack punch'
-      set_state :PunchLeft
+      set_state "PunchLeft"
     when 'attack jab'
-      set_state :JabLeft
+      set_state "JabLeft"
     end
   end
   
   def control_up control
     case control
     when 'block'
-      set_state :PreBlockLeft, {mode: :backward}
+      set_state "PreBlockLeft", {'mode' => "backward"}
     end
   end
   

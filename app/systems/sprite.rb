@@ -5,7 +5,7 @@ module Systems::Sprite
       entity_manager.each_entity_with_components Components::Sprite do |entity, sprites|
         sprites.each do |sprite|
           case sprite.mode
-          when :forward
+          when "forward"
             sprite.index = sprite.index + sprite.fps/60.0
             if sprite.index >= sprite.images.length-1
               sprite.index = sprite.images.length-1
@@ -14,7 +14,7 @@ module Systems::Sprite
               sprite.done = false
             end
             sprite.image = sprite.images[sprite.index]
-          when :backward
+          when "backward"
             sprite.index = sprite.index - sprite.fps/60.0
             if sprite.index <= 0
               sprite.index = 0
@@ -23,7 +23,7 @@ module Systems::Sprite
               sprite.done = false
             end
             sprite.image = sprite.images[sprite.index]
-          when :loop
+          when "loop"
             sprite.index = (sprite.index + sprite.fps/60.0) % sprite.images.length
             sprite.image = sprite.images[sprite.index]
           end

@@ -19,10 +19,10 @@ module SpriteSheet
     #center_y = raw['meta']['center_y'] ? raw['meta']['center_y'] / h : 1.0
     
     image_info = {
-      name: name,
-      images: [],
-      center_x: raw['meta']['center_x'].to_f,
-      center_y: raw['meta']['center_y'].to_f
+      'name' => name,
+      'images' => [],
+      'center_x' => raw['meta']['center_x'].to_f,
+      'center_y' => raw['meta']['center_y'].to_f
     }
     
     raw['frames'].each do |frame|
@@ -30,7 +30,7 @@ module SpriteSheet
       image = spritesheet.subimage(f['x'], f['y'], f['w'], f['h'])
       warn "#{image_path} is slow at loading! try making it a 1024x1024 spritesheet" unless image
       image ||= Gosu::Image.new $window, spritesheet, true, f['x'], f['y'], f['w'], f['h']
-      image_info[:images] << image
+      image_info["images"] << image
     end
     
     image_info

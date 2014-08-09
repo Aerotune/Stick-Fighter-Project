@@ -1,9 +1,9 @@
-class Characters::Stick1::States::PreBlockRight < Character::State
+class Characters::Stick1V2::States::PreBlockLeft < Character::State
   attr_reader :components
   
   def initialize character
     @character = character
-    @sprite = Components::Sprite.new(@character.class.image_resource['pre_block'].merge 'factor_x' => -1, 'fps' => 45, 'mode' => "forward")
+    @sprite = Components::Sprite.new(@character.class.image_resource['pre_block'].merge 'factor_x' => 1, 'fps' => 45, 'mode' => "forward")
     @components = [
       @sprite
     ]
@@ -23,9 +23,9 @@ class Characters::Stick1::States::PreBlockRight < Character::State
     if @sprite.done
       case @sprite.mode
       when "forward"
-        set_state "BlockRight"
+        set_state "BlockLeft"
       when "backward"
-        set_state "IdleRight"
+        set_state "IdleLeft"
       end
     end
   end
@@ -37,11 +37,11 @@ class Characters::Stick1::States::PreBlockRight < Character::State
     when 'move left'
       set_state "RunLeft"
     when 'move jump'
-      set_state "JumpRight"
+      set_state "JumpLeft"
     when 'attack punch'
-      set_state "PunchRight"
+      set_state "PunchLeft"
     when 'attack jab'
-      set_state "JabRight"
+      set_state "JabLeft"
     when 'block'
       @sprite.mode = "forward"
     end
@@ -56,10 +56,10 @@ class Characters::Stick1::States::PreBlockRight < Character::State
   
   def on_hit
     if @sprite.mode == "forward" && @sprite.index > @sprite.images.length/2
-      set_state "BlockRight"
+      set_state "BlockLeft"
       @character.on_hit
     else
-      set_state "PunchedRight"
+      set_state "PunchedFrontLeft"
     end
   end
 end

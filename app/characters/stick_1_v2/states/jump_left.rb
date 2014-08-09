@@ -1,4 +1,4 @@
-class Characters::Stick1::States::JumpLeft < Character::State
+class Characters::Stick1V2::States::JumpLeft < Character::State
   attr_reader :components
   
   def initialize character

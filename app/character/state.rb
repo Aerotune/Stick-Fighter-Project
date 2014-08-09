@@ -1,6 +1,9 @@
 class Character::State
   def control_down control
-    
+    if @control_down_triggers
+      state_name = @control_down_triggers[control]
+      set_state state_name if state_name
+    end
   end
   
   def control_up control

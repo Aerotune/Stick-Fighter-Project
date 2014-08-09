@@ -1,4 +1,4 @@
-class Characters::Stick1::States::SlideRight < Character::State
+class Characters::Stick1V2::States::SlideRight < Character::State
   attr_reader :components
   
   def initialize character
@@ -38,6 +38,6 @@ class Characters::Stick1::States::SlideRight < Character::State
   end
   
   def on_hit
-    set_state "PunchedRight"
+    set_state "PunchedFrontRight"
   end
 end

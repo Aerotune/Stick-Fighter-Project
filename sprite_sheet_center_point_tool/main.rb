@@ -22,7 +22,7 @@ class Window < Gosu::Window
     
     @current_sprite_sheet_index = 0
     @current_sprite_sheet = @sprite_sheets[@sprite_sheets.keys[@current_sprite_sheet_index]]
-    @image = @current_sprite_sheet[:images].first
+    @image = @current_sprite_sheet["images"].first
     @image_index = 0
   end
   
@@ -33,8 +33,8 @@ class Window < Gosu::Window
   def button_down id
     case id
     when Gosu::MsLeft
-      @start_center_x = @current_sprite_sheet[:center_x]
-      @start_center_y = @current_sprite_sheet[:center_y]
+      @start_center_x = @current_sprite_sheet["center_x"]
+      @start_center_y = @current_sprite_sheet["center_y"]
       @mouse_start_x = mouse_x
       @mouse_start_y = mouse_y
     when Gosu::KbTab
@@ -43,20 +43,20 @@ class Window < Gosu::Window
       @current_sprite_sheet_index = (@current_sprite_sheet_index - delta_index) % @sprite_sheets.length
       @current_sprite_sheet = @sprite_sheets[@sprite_sheets.keys[@current_sprite_sheet_index]]
     when Gosu::KbRight
-      @current_sprite_sheet[:center_x] -= 1
+      @current_sprite_sheet["center_x"] -= 1
     when Gosu::KbLeft
-      @current_sprite_sheet[:center_x] += 1
+      @current_sprite_sheet["center_x"] += 1
     when Gosu::KbUp
-      @current_sprite_sheet[:center_y] += 1
+      @current_sprite_sheet["center_y"] += 1
     when Gosu::KbDown
-      @current_sprite_sheet[:center_y] -= 1
+      @current_sprite_sheet["center_y"] -= 1
     when Gosu::KbS
       @sprite_sheets.each do |sprite_sheet_path, sprite_sheet|
         raw_json = IO.read(sprite_sheet_path).encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
         json = JSON.parse(raw_json)
         
-        json['meta']['center_x'] = sprite_sheet[:center_x]
-        json['meta']['center_y'] = sprite_sheet[:center_y]
+        json['meta']['center_x'] = sprite_sheet["center_x"]
+        json['meta']['center_y'] = sprite_sheet["center_y"]
         p json
         File.open(sprite_sheet_path, 'w') do |file|
           file.write json.to_json
@@ -68,12 +68,12 @@ class Window < Gosu::Window
   
   def update
         
-    @image_index = (@image_index + 27.0/60.0) % @current_sprite_sheet[:images].length
-    @image = @current_sprite_sheet[:images][@image_index]
+    @image_index = (@image_index + 27.0/60.0) % @current_sprite_sheet["images"].length
+    @image = @current_sprite_sheet["images"][@image_index]
     
     if button_down? Gosu::MsLeft
-      @current_sprite_sheet[:center_x] = @start_center_x + (@mouse_start_x - mouse_x) 
-      @current_sprite_sheet[:center_y] = @start_center_y + (@mouse_start_y - mouse_y)
+      @current_sprite_sheet["center_x"] = @start_center_x + (@mouse_start_x - mouse_x) 
+      @current_sprite_sheet["center_y"] = @start_center_y + (@mouse_start_y - mouse_y)
     elsif button_down? Gosu::KbSpace
       @anchor_point_x = mouse_x
       @anchor_point_y = mouse_y
@@ -91,7 +91,7 @@ class Window < Gosu::Window
       @anchor_point_x+radius, @anchor_point_y+radius, color, 
       @anchor_point_x+radius, @anchor_point_y-radius, color 
     
-    @image.draw @anchor_point_x-@current_sprite_sheet[:center_x],@anchor_point_y-@current_sprite_sheet[:center_y],0
+    @image.draw @anchor_point_x-@current_sprite_sheet["center_x"],@anchor_point_y-@current_sprite_sheet["center_y"],0
   end
   
   def fill c1, c2=c1, c3=c2, c4=c3

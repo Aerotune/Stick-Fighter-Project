@@ -1,9 +1,9 @@
-class Characters::Stick1::States::BlockRight < Character::State
+class Characters::Stick1V2::States::BlockLeft < Character::State
   attr_reader :components
   
   def initialize character
     @character = character
-    @sprite = Components::Sprite.new(@character.class.image_resource['block'].merge 'factor_x' => -1, 'fps' => 0, 'mode' => "forward")
+    @sprite = Components::Sprite.new(@character.class.image_resource['block'].merge 'factor_x' => 1, 'fps' => 0, 'mode' => "forward")
     @components = [
       @sprite
     ]
@@ -25,24 +25,24 @@ class Characters::Stick1::States::BlockRight < Character::State
     when 'move left'
       set_state "RunLeft"
     when 'move jump'
-      set_state "JumpRight"
+      set_state "JumpLeft"
     when 'attack punch'
-      set_state "PunchRight"
+      set_state "PunchLeft"
     when 'attack jab'
-      set_state "JabRight"
+      set_state "JabLeft"
     end
   end
   
   def control_up control
     case control
     when 'block'
-      set_state "PreBlockRight", {'mode' => "backward"}
+      set_state "PreBlockLeft", 'mode' => "backward"
     end
   end
   
   def on_hit
     @sprite.index = 1
     @sprite.fps = 37
-    @character.x -= 2
+    @character.x += 2
   end
 end

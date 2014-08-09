@@ -1,9 +1,9 @@
-class Characters::Stick1::States::PunchedLeft < Character::State
+class Characters::Stick1V2::States::PunchedFrontLeft < Character::State
   attr_reader :components
   
   def initialize character
     @character = character
-    @sprite = Components::Sprite.new(@character.class.image_resource['punched'].merge 'factor_x' => 1, 'fps' => 33, 'mode' => "forward")
+    @sprite = Components::Sprite.new(@character.class.image_resource['punched_front'].merge 'factor_x' => 1, 'fps' => 33, 'mode' => "forward")
     @components = [
       @sprite
     ]
@@ -39,6 +39,6 @@ class Characters::Stick1::States::PunchedLeft < Character::State
   end
   
   def on_hit
-    set_state "PunchedLeft"
+    set_state "PunchedFrontLeft"
   end
 end

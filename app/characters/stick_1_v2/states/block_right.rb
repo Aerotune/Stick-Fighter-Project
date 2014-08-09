@@ -1,4 +1,4 @@
-class Characters::Stick1::States::BlockRight < Character::State
+class Characters::Stick1V2::States::BlockRight < Character::State
   attr_reader :components
   
   def initialize character

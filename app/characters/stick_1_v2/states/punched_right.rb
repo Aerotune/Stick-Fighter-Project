@@ -1,9 +1,9 @@
-class Characters::Stick1::States::JabRight < Character::State
+class Characters::Stick1V2::States::PunchedFrontRight < Character::State
   attr_reader :components
   
   def initialize character
     @character = character
-    @sprite = Components::Sprite.new(@character.class.image_resource['jab'].merge 'factor_x' => -1, 'fps' => 33, 'mode' => "forward")
+    @sprite = Components::Sprite.new(@character.class.image_resource['punched_front'].merge 'factor_x' => -1, 'fps' => 33, 'mode' => "forward")
     @components = [
       @sprite
     ]
@@ -11,9 +11,8 @@ class Characters::Stick1::States::JabRight < Character::State
   end
   
   def update
-    @character.x += 0.25
-    time_passed = Time.now.to_f - @time_set
-    if time_passed > @duration
+    @character.x -= 0.25
+    if Time.now.to_f - @time_set > @duration
       if controls.control_down? 'move right'
         set_state "RunRight"
       elsif controls.control_down? 'move left'
@@ -22,12 +21,6 @@ class Characters::Stick1::States::JabRight < Character::State
         set_state "PreBlockRight"
       else
         set_state @next_state
-      end
-    elsif time_passed > @duration / 4.0
-      if time_passed < @duration / 1.5
-        create_punch_hit_box "right"
-      else
-        remove_punch_hit_box
       end
     end
   end
@@ -45,11 +38,7 @@ class Characters::Stick1::States::JabRight < Character::State
     @sprite.index = 0
   end
   
-  def on_unset
-    remove_punch_hit_box
-  end
-  
   def on_hit
-    set_state "PunchedRight"
+    set_state "PunchedFrontRight"
   end
 end

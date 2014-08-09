@@ -3,7 +3,7 @@ class Characters::Stick1::States::InAirRight < Character::State
   
   def initialize character
     @character = character
-    @sprite = Components::Sprite.new @character.class.image_resource['pre_land'].merge(factor_x: -1, fps: 0, mode: :forward)
+    @sprite = Components::Sprite.new @character.class.image_resource['pre_land'].merge('factor_x' => -1, 'fps' => 0, 'mode' => "forward")
       
     @components = [
       @sprite
@@ -25,7 +25,7 @@ class Characters::Stick1::States::InAirRight < Character::State
     @character.x += @vel_x
     if @character.y > 500
       @character.y = 500
-      set_state :LandRight, velocity_x: @vel_x*0.3
+      set_state "LandRight", 'velocity_x' => @vel_x*0.3
     end
   end
   

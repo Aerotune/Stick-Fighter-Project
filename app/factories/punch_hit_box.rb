@@ -3,8 +3,8 @@ module Factories::PunchHitBox
     width  = 70
     height = 50
     case punch_direction
-    when :right; offset_x = 38
-    when :left;  offset_x = -(38 + width)      
+    when "right"; offset_x = 38
+    when "left";  offset_x = -(38 + width)      
     end
     offset_y = -151
     x = character.x + offset_x

@@ -3,7 +3,7 @@ class Characters::Stick1::States::JumpRight < Character::State
   
   def initialize character
     @character = character
-    @sprite = Components::Sprite.new(@character.class.image_resource['jump'].merge factor_x: -1, fps: 45, mode: :forward)
+    @sprite = Components::Sprite.new(@character.class.image_resource['jump'].merge 'factor_x' => -1, 'fps' => 45, 'mode' => "forward")
     @components = [
       @sprite
     ]
@@ -15,7 +15,7 @@ class Characters::Stick1::States::JumpRight < Character::State
     time_passed = Time.now.to_f - @time_set
     
     if time_passed >= @duration
-      set_state :InAirRight
+      set_state "InAirRight"
     elsif time_passed > @duration/2.0
       @character.y -= 20
     end

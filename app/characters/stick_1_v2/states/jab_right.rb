@@ -1,4 +1,4 @@
-class Characters::Stick1::States::JabRight < Character::State
+class Characters::Stick1V2::States::JabRight < Character::State
   attr_reader :components
   
   def initialize character
@@ -50,6 +50,6 @@ class Characters::Stick1::States::JabRight < Character::State
   end
   
   def on_hit
-    set_state "PunchedRight"
+    set_state "PunchedFrontRight"
   end
 end

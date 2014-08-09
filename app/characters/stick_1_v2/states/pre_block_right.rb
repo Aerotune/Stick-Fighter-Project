@@ -1,4 +1,4 @@
-class Characters::Stick1::States::PreBlockRight < Character::State
+class Characters::Stick1V2::States::PreBlockRight < Character::State
   attr_reader :components
   
   def initialize character
@@ -59,7 +59,7 @@ class Characters::Stick1::States::PreBlockRight < Character::State
       set_state "BlockRight"
       @character.on_hit
     else
-      set_state "PunchedRight"
+      set_state "PunchedFrontRight"
     end
   end
 end

@@ -14,7 +14,7 @@ class Character
     self.class.load_image_resource
     self.class::States.constants.each do |state_name|
       state_class = self.class::States.const_get(state_name)
-      @states[state_name] = state_class.new self
+      @states[state_name.to_s] = state_class.new self
     end
   end
   
@@ -73,11 +73,15 @@ class Character
   end
   
   def set_state state_name, options={}
+    raise "state #{state_name.inspect} doesn't exist for #{self.class}" unless @states.has_key? state_name
+    
+    
     @state_name = state_name
     new_state = @states[@state_name]
     prev_state = @current_state
     
     #return if new_state == prev_state
+    
     
     if prev_state
       prev_state.components.each do |component|
@@ -105,7 +109,7 @@ class Character
     
       @sprite_sheet_paths.each do |sprite_sheet_path|
         spritesheet = SpriteSheet.load sprite_sheet_path
-        @image_resource[spritesheet[:name]] = spritesheet
+        @image_resource[spritesheet["name"]] = spritesheet
       end
     end
   end

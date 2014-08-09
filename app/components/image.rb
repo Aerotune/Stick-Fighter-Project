@@ -3,10 +3,10 @@ class Components::Image < Component
   
   def initialize options
     super()
-    @name     = options[:name]
-    @center_x = options[:center_x]
-    @center_y = options[:center_y]
-    @image    = options[:image]
-    @factor_x = options[:factor_x] || 1
+    @name     = options["name"]
+    @center_x = options["center_x"]
+    @center_y = options["center_y"]
+    @image    = options["image"]
+    @factor_x = options["factor_x"] || 1
   end
 end

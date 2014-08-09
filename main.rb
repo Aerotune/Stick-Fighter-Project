@@ -11,24 +11,9 @@ class Window < Gosu::Window
     $window = super 800, 600, false, 16.6666
     
     @entity_manager = EntityManager.new
-    #entity1 = @entity_manager.create_entity
-    #entity2 = @entity_manager.create_entity
-    #@tint = Components::Tint.new([0.0, 0.0, 0.5])
-    #@entity_manager.add_component entity1, @tint
-    #
-    #@tint = Components::Tint.new([0.5, 0.0, 0.0])
-    #@entity_manager.add_component entity2, @tint
-    #
-    #
-    #@stick_1.set_state :IdleRight
-    #
-    #@stick_2 = Characters::Stick1.new @entity_manager, entity2, Settings::CONTROLS['player2']
-    #@stick_2.set_state :IdleRight
-    #$stick_2 = @stick_2
     
-    @stick_1 = Factories::Player.construct @entity_manager, 500, 500, 'player1', [0.5, 0, 0], :IdleLeft
-    @stick_2 = Factories::Player.construct @entity_manager, 200, 500, 'player2', [0, 0, 0.5], :IdleRight
-    #$stick_2 = @stick_2
+    @stick_1 = Factories::Player.construct @entity_manager, 500, 500, 'player1', [0.5, 0, 0], "IdleLeft"
+    @stick_2 = Factories::Player.construct @entity_manager, 200, 500, 'player2', [0, 0, 0.5], "IdleRight"
     
     #Shaders.load
   end
@@ -53,7 +38,7 @@ class Window < Gosu::Window
   def draw
     fill 0xFF557BC6, 0xFF4F91ED
 
-    scale = 0.5
+    scale = 1.0
     scale scale, scale, width/2.0, height do
       Systems::Sprite.draw @entity_manager
       #Systems::HitTest.draw @entity_manager

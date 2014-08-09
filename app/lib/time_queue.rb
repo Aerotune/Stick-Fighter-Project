@@ -10,10 +10,10 @@ class TimeQueue
   
   def set_time! new_time
     current_events = pop_current_events(new_time)
-    current_events[:undo].reverse_each do |event|
+    current_events["undo"].reverse_each do |event|
       event.command.undo!
     end
-    current_events[:do].each do |event|
+    current_events["do"].each do |event|
       event.command.do!
     end
   end
@@ -41,14 +41,14 @@ class TimeQueue
     if new_time > @current_time
       # Moving forward in time!
       @current_time = new_time
-      return {do: pop_future_events, undo: []}
+      return {'do' => pop_future_events, 'undo' => []}
     elsif new_time < @current_time
       # Moving back in time!
       @current_time = new_time      
-      return {do: [], undo: pop_past_events}
+      return {'do' => [], 'undo' => pop_past_events}
     else
       # Already called before with the same time
-      return {do: [], undo: []}
+      return {'do' => [], 'undo' => []}
     end
   end
   

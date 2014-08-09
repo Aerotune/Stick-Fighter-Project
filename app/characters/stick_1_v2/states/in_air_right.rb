@@ -1,9 +1,9 @@
-class Characters::Stick1::States::InAirLeft < Character::State
+class Characters::Stick1V2::States::InAirRight < Character::State
   attr_reader :components
   
   def initialize character
     @character = character
-    @sprite = Components::Sprite.new @character.class.image_resource['pre_land'].merge('factor_x' => 1, 'fps' => 0, 'mode' => "forward")
+    @sprite = Components::Sprite.new @character.class.image_resource['pre_land'].merge('factor_x' => -1, 'fps' => 0, 'mode' => "forward")
       
     @components = [
       @sprite
@@ -25,25 +25,25 @@ class Characters::Stick1::States::InAirLeft < Character::State
     @character.x += @vel_x
     if @character.y > 500
       @character.y = 500
-      set_state "LandLeft", 'velocity_x' => @vel_x*0.3
+      set_state "LandRight", 'velocity_x' => @vel_x*0.3
     end
   end
   
   def control_down control
     case control
     when 'move right'
-      @vel_x = 5
+      @vel_x = 12
     when 'move left'
-      @vel_x = -12
+      @vel_x = -5
     end
   end
   
   def control_up control
     case control
     when 'move right'
-      @vel_x = controls.control_down?('move left') ? -12 : 0
+      @vel_x = controls.control_down?('move left') ? -5 : 0
     when 'move left'
-      @vel_x = controls.control_down?('move right') ? 5 : 0
+      @vel_x = controls.control_down?('move right') ? 12 : 0
     end
   end
   
@@ -55,9 +55,8 @@ class Characters::Stick1::States::InAirLeft < Character::State
     @acceleration = 1.8
     @sprite.index = 0
     @vel_x = 0
-    @vel_x = 5 if controls.control_down? 'move right'
-    @vel_x = -12 if controls.control_down? 'move left'
-    
+    @vel_x = -5 if controls.control_down? 'move left'
+    @vel_x = 12 if controls.control_down? 'move right'
     
   end
 end
