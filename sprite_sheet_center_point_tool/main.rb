@@ -12,7 +12,7 @@ class Window < Gosu::Window
     super 800, 600, false
     $window = self
     @sprite_sheets = {}
-    #Dir['../resources/images/stick_1_v2/*.json']
+
     Dir[File.join(File.dirname(__FILE__), *%w[.. resources images stick_1_v2 *.json])].each do |sprite_sheet_path|
       @sprite_sheets[sprite_sheet_path] = SpriteSheet.load(sprite_sheet_path)
     end
