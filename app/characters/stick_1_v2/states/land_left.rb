@@ -15,7 +15,7 @@ class Characters::Stick1V2::States::LandLeft < Character::State
   end
   
   def update    
-    if @sprite.done
+    if @sprite.done?
       if controls.control_down? 'move left'
         if @next_state == "JumpLeft"
           set_state @next_state
@@ -40,7 +40,7 @@ class Characters::Stick1V2::States::LandLeft < Character::State
       @next_state = "PunchLeft"
     when 'attack jab'
       @next_state = "JabLeft"
-    when 'move jump'
+    when 'move up'
       @next_state = "JumpLeft"
     end
   end

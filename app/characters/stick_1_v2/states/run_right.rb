@@ -24,7 +24,7 @@ class Characters::Stick1V2::States::RunRight < Character::State
   
   def control_down control
     case control
-    when 'move jump'
+    when 'move up'
       set_state "JumpRight"
     end
   end

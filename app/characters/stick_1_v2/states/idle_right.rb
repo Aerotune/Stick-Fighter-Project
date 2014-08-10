@@ -10,7 +10,7 @@ class Characters::Stick1V2::States::IdleRight < Character::State
     @control_down_triggers = {
       'move right' => "RunRight",
       'move left' => "RunLeft",
-      'move jump' => "JumpRight",
+      'move up' => "JumpRight",
       'attack punch' => "PunchRight",
       'attack jab' => "JabRight",
       'block' => "PreBlockRight"

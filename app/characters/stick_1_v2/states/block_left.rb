@@ -24,7 +24,7 @@ class Characters::Stick1V2::States::BlockLeft < Character::State
       set_state "RunRight"
     when 'move left'
       set_state "RunLeft"
-    when 'move jump'
+    when 'move up'
       set_state "JumpLeft"
     when 'attack punch'
       set_state "PunchLeft"

@@ -12,17 +12,22 @@ module Systems::HitTest
       hit_box.y = position.y - hit_box.height
     end
     
+    
+    
     entity_manager.each_entity_with_components Components::PunchHitBox do |punching_entity, punch_hit_boxes|
+      
       punch_hit_boxes.each do |punch_hit_box|
-        
         entity_manager.each_entity_with_component Components::HitBox do |hit_box_entity, hit_box|
           next if hit_box_entity == punching_entity
           if boxes_hit? punch_hit_box, hit_box
+            entity_manager.remove_component punching_entity, punch_hit_box
             $characters[hit_box_entity].on_hit 'punch_direction' => punch_hit_box.punch_direction
           end
         end
       end
     end
+    
+    
   end
   
   def self.draw entity_manager

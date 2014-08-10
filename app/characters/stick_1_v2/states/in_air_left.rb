@@ -12,7 +12,7 @@ class Characters::Stick1V2::States::InAirLeft < Character::State
   end
   
   def update
-    if controls.control_down? 'move jump'
+    if controls.control_down? 'move up'
       @velocity += @acceleration*0.4
     elsif controls.control_down? 'move down'
       @velocity += @acceleration*1.5

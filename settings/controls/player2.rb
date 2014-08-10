@@ -1,5 +1,5 @@
 Settings::CONTROLS['player2'] = Controls.new \
-  "w" => "move jump",
+  "w" => "move up",
   "d" => "move right",
   "a" => "move left",
   "s" => "move down",

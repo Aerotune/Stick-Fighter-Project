@@ -20,4 +20,15 @@ class Components::Sprite < Component
     @done = false
     @mode = mode
   end
+  
+  def done?
+    case mode
+    when 'forward'
+      @index == @images.length - 1
+    when 'backward'
+      @index == 0
+    else
+      false
+    end
+  end
 end

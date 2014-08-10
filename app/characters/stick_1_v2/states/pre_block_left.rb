@@ -25,7 +25,7 @@ class Characters::Stick1V2::States::PreBlockLeft < Character::State
   end
   
   def update
-    if @sprite.done
+    if @sprite.done?
       case @sprite.mode
       when "forward"
         set_state "BlockLeft"
@@ -41,7 +41,7 @@ class Characters::Stick1V2::States::PreBlockLeft < Character::State
       set_state "RunRight"
     when 'move left'
       set_state "RunLeft"
-    when 'move jump'
+    when 'move up'
       set_state "JumpLeft"
     when 'attack punch'
       set_state "PunchLeft"

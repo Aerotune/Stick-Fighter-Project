@@ -10,7 +10,7 @@ class Characters::Stick1V2::States::PunchedBehindLeft < Character::State
     @duration = @sprite.images.length / @sprite.fps.to_f
     
     @punch_trigger = {
-      'left' => "PunchedBehindLeft",
+      'left' => "FallToStomachLeft",
       'right' => "PunchedFrontLeft"
     }
   end

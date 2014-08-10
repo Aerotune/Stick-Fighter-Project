@@ -8,7 +8,7 @@ Dir[File.join(File.dirname(__FILE__), *%w[app *.rb])]    .each { |file| require 
 
 class Window < Gosu::Window
   def initialize
-    $window = super 800, 600, false, 16.6666
+    $window = super 1000, 600, false, 16.6666
     
     @entity_manager = EntityManager.new
     
@@ -38,7 +38,7 @@ class Window < Gosu::Window
   def draw
     fill 0xFF557BC6, 0xFF4F91ED
 
-    scale = 1.0
+    scale = 0.6
     scale scale, scale, width/2.0, height do
       Systems::Sprite.draw @entity_manager
       #Systems::HitTest.draw @entity_manager

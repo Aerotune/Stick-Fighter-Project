@@ -11,7 +11,7 @@ class Characters::Stick1V2::States::PunchedFrontLeft < Character::State
     
     @punch_trigger = {
       'left' => "PunchedBehindLeft",
-      'right' => "PunchedFrontLeft"
+      'right' => "FallToBackLeft"
     }
   end
   

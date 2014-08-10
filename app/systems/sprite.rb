@@ -7,20 +7,14 @@ module Systems::Sprite
           case sprite.mode
           when "forward"
             sprite.index = sprite.index + sprite.fps/60.0
-            if sprite.index >= sprite.images.length-1
+            if sprite.index > sprite.images.length-1
               sprite.index = sprite.images.length-1
-              sprite.done = true
-            else
-              sprite.done = false
             end
             sprite.image = sprite.images[sprite.index]
           when "backward"
             sprite.index = sprite.index - sprite.fps/60.0
-            if sprite.index <= 0
+            if sprite.index < 0
               sprite.index = 0
-              sprite.done = true
-            else
-              sprite.done = false
             end
             sprite.image = sprite.images[sprite.index]
           when "loop"

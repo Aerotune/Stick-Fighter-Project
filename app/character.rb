@@ -52,12 +52,14 @@ class Character
   
   def button_down id
     key_symbol = KEY_SYMBOLS[id]
-    control_down @controls[key_symbol]
+    control = @controls[key_symbol]
+    control_down control if control
   end
   
   def button_up id
     key_symbol = KEY_SYMBOLS[id]
-    control_up @controls[key_symbol]
+    control = @controls[key_symbol]
+    control_up control if control
   end
   
   def control_down control

@@ -32,7 +32,7 @@ class Characters::Stick1V2::States::SlideRight < Character::State
     when 'move right'; set_state "RunRight"
     when 'attack punch';  @next_state = "PunchRight"
     when 'attack jab';    @next_state = "JabRight"
-    when 'move jump'
+    when 'move up'
       set_state "JumpRight"
     end
   end
