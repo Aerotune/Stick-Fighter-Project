@@ -1,4 +1,4 @@
-class Characters::Stick1V2::States::StandUpFromStomachkLeft < Character::State
+class Characters::Stick1V2::States::StandUpFromStomachLeft < Character::State
   attr_reader :components
   
   def initialize character

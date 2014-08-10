@@ -41,7 +41,7 @@ class Window < Gosu::Window
     scale = 0.6
     scale scale, scale, width/2.0, height do
       Systems::Sprite.draw @entity_manager
-      #Systems::HitTest.draw @entity_manager
+      Systems::HitTest.draw @entity_manager
     end
   end
   

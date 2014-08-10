@@ -31,4 +31,8 @@ class Components::Sprite < Component
       false
     end
   end
+  
+  def progress
+    @index.to_f/@images.length
+  end
 end

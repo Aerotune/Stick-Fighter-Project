@@ -31,40 +31,42 @@ module Systems::HitTest
   end
   
   def self.draw entity_manager
-    entity_manager.each_entity_with_component Components::HitBox do |entity, hit_box|
-      
-      c = 0x44FF0000
-      $window.draw_quad \
-        hit_box.x,
-        hit_box.y,
-        c,
-        hit_box.x+hit_box.width,
-        hit_box.y,
-        c,
-        hit_box.x+hit_box.width,
-        hit_box.y+hit_box.height,
-        c,
-        hit_box.x,
-        hit_box.y+hit_box.height,
-        c
+    entity_manager.each_entity_with_components Components::HitBox do |entity, hit_boxes|
+      hit_boxes.each do |hit_box|
+        c = 0x44FF0000
+        $window.draw_quad \
+          hit_box.x,
+          hit_box.y,
+          c,
+          hit_box.x+hit_box.width,
+          hit_box.y,
+          c,
+          hit_box.x+hit_box.width,
+          hit_box.y+hit_box.height,
+          c,
+          hit_box.x,
+          hit_box.y+hit_box.height,
+          c
+      end
     end
     
-    entity_manager.each_entity_with_component Components::PunchHitBox do |entity, hit_box|
-      
-      c = 0x4400FF00
-      $window.draw_quad \
-        hit_box.x,
-        hit_box.y,
-        c,
-        hit_box.x+hit_box.width,
-        hit_box.y,
-        c,
-        hit_box.x+hit_box.width,
-        hit_box.y+hit_box.height,
-        c,
-        hit_box.x,
-        hit_box.y+hit_box.height,
-        c
+    entity_manager.each_entity_with_components Components::PunchHitBox do |entity, hit_boxes|
+      hit_boxes.each do |hit_box|
+        c = 0x4400FF00
+        $window.draw_quad \
+          hit_box.x,
+          hit_box.y,
+          c,
+          hit_box.x+hit_box.width,
+          hit_box.y,
+          c,
+          hit_box.x+hit_box.width,
+          hit_box.y+hit_box.height,
+          c,
+          hit_box.x,
+          hit_box.y+hit_box.height,
+          c
+      end
     end
   end
 end

@@ -26,6 +26,8 @@ class Characters::Stick1V2::States::RunRight < Character::State
     case control
     when 'move up'
       set_state "JumpRight"
+    when 'attack punch', 'attack jab'
+      set_state "RunningAttackRight"
     end
   end
   
