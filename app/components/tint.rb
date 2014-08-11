@@ -2,7 +2,6 @@ class Components::Tint < Component
   attr_accessor :color
   
   def initialize color
-    super()
     @color = color
   end
   

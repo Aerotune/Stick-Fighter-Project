@@ -5,7 +5,7 @@ class ComponentManager
   end
   
   def add_component component
-    @components[component.component_id] = component
+    @components[component.id] = component
   end
   
   def get_component component_id

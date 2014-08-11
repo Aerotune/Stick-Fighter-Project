@@ -13,7 +13,7 @@ class Window < Gosu::Window
     $window = self
     @sprite_sheets = {}
 
-    Dir[File.join(File.dirname(__FILE__), *%w[.. resources images stick_1_v2 *.json])].each do |sprite_sheet_path|
+    Dir[File.join(File.dirname(__FILE__), *%w[.. resources graphics stick_1_v2 *.json])].each do |sprite_sheet_path|
       @sprite_sheets[sprite_sheet_path] = SpriteSheet.load(sprite_sheet_path)
     end
     
@@ -52,12 +52,11 @@ class Window < Gosu::Window
       @current_sprite_sheet["center_y"] -= 1
     when Gosu::KbS
       @sprite_sheets.each do |sprite_sheet_path, sprite_sheet|
-        raw_json = IO.read(sprite_sheet_path).encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
-        json = JSON.parse(raw_json)
+        json = JSON.parse_file(sprite_sheet_path)
         
         json['meta']['center_x'] = sprite_sheet["center_x"]
         json['meta']['center_y'] = sprite_sheet["center_y"]
-        p json
+
         File.open(sprite_sheet_path, 'w') do |file|
           file.write json.to_json
         end        

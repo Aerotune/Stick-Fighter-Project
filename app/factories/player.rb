@@ -1,7 +1,7 @@
 module Factories::Player
   $characters = {}
   
-  def self.construct entity_manager, x, y, controls, tint_color, initial_state="IdleRight"
+  def self.construct entity_manager, stage, x, y, controls, tint_color, initial_state="IdleRight"
     entity = entity_manager.create_entity
     
     position = Components::Position.new(x, y)
@@ -14,7 +14,7 @@ module Factories::Player
     #entity_manager.add_component entity, tint
     entity_manager.add_component entity, hit_box
     
-    character = Characters::Stick1V2.new entity_manager, entity, Settings::CONTROLS[controls]
+    character = Characters::Stick1V2.new entity_manager, entity, stage, Settings::CONTROLS[controls]
     character.set_state initial_state
     $characters[entity] = character
     character

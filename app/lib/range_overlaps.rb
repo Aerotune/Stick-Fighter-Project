@@ -1,5 +1,5 @@
 class Range
-  def overlaps?(other)
-    (self.first <= other.last) and (other.first <= self.last)
+  def overlaps? range
+    (first <= range.last) && (range.first <= last)
   end
 end

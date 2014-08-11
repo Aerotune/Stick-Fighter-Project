@@ -1,0 +1,10 @@
+{
+  "id": "platform_1",
+  "image": "platform_1.png",
+  "bounding_box": {
+    "x": 24,
+    "y": 8,
+    "width": 515,
+    "height": 56
+  }
+}

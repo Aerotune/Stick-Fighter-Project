@@ -1,7 +1,6 @@
 class Components::HitBox < Component
   attr_accessor :x, :y, :width, :height
   def initialize x, y, width, height
-    super()
     @x = x
     @y = y
     @width = width

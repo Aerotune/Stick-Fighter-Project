@@ -1,12 +1,13 @@
-require 'json'
+require_relative 'json'
 
 module SpriteSheet
   def self.load sprite_sheet_path
-    raw_json = IO.read(sprite_sheet_path).encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
+    #raw_json = IO.read(sprite_sheet_path).encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
     #raise "RAW: #{raw.inspect}"
     #raw[0] = '' if raw[0] == "﻿"
     #raw[] = ''
-    raw = JSON.parse(raw_json)
+    #raw = JSON.parse(raw_json)
+    raw = JSON.parse_file(sprite_sheet_path)
     image_path = File.join File.dirname(sprite_sheet_path), raw['meta']['image']
     name = File.basename image_path, '.png'
     

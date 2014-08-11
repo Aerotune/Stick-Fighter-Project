@@ -1,5 +1,15 @@
 class TimeQueue
+  
+  class Event
+    attr_reader :time, :command
+    def initialize time, command
+      @time = time
+      @command = command
+    end
+  end
+  
   class AddingEventsToThePastError < RuntimeError; end
+  
   attr_reader :future_events, :past_events
   
   def initialize
@@ -18,7 +28,7 @@ class TimeQueue
     end
   end
   
-  def add_event time, command
+  def add_command time, command
     raise AddingEventsToThePastError if @current_time > time
     @sorted = false
     @future_events << Event.new(time, command)
@@ -72,14 +82,5 @@ class TimeQueue
     @past_events[range] = []
     @future_events.unshift *current_events    
     current_events
-  end
-  
-  class Event
-    attr_reader :time, :command
-    
-    def initialize time, command
-      @time = time
-      @command = command
-    end
   end
 end

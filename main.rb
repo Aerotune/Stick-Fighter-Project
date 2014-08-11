@@ -9,39 +9,30 @@ Dir[File.join(File.dirname(__FILE__), *%w[app *.rb])]    .each { |file| require 
 class Window < Gosu::Window
   def initialize
     $window = super 1000, 600, false, 16.6666
-    
-    @entity_manager = EntityManager.new
-    
-    @stick_1 = Factories::Player.construct @entity_manager, 500, 500, 'player1', [0.5, 0, 0], "IdleLeft"
-    @stick_2 = Factories::Player.construct @entity_manager, 200, 500, 'player2', [0, 0, 0.5], "IdleRight"
+    @stage = Stage.new
     
     #Shaders.load
   end
   
   def button_down id
-    @stick_1.button_down id
-    @stick_2.button_down id
+    @stage.button_down id
   end
   
   def button_up id
-    @stick_1.button_up id
-    @stick_2.button_up id
+    @stage.button_up id
   end
   
   def update
-    @stick_1.update
-    @stick_2.update
-    Systems::HitTest.update @entity_manager
-    Systems::Sprite.update @entity_manager
+    @stage.update
   end
   
   def draw
     fill 0xFF557BC6, 0xFF4F91ED
-
+    
     scale = 0.6
     scale scale, scale, width/2.0, height do
-      Systems::Sprite.draw @entity_manager
-      Systems::HitTest.draw @entity_manager
+      @stage.draw
+      #Systems::HitTest.draw @entity_manager
     end
   end
   

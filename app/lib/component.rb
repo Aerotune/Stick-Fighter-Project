@@ -1,10 +1,8 @@
 require_relative 'identifier'
 
 class Component
-  attr_reader :component_id
-  
-  def initialize
-    @component_id = Identifier.create_id
+  def id
+    @id ||= Identifier.create_id.freeze
   end
   
   ## Define the instance method as the one from the module AttributesAsMsgpack

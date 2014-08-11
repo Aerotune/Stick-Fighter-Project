@@ -1,17 +1,18 @@
 class Character
   Dir[File.join(File.dirname(__FILE__), *%w[character *.rb])].each { |file| require file }
   
-  attr_reader :controls, :state_name
+  attr_reader :controls, :state_name, :states, :entity_manager, :entity, :stage
   
-  def initialize entity_manager, entity, controls
+  def initialize entity_manager, entity, stage, controls
     @entity_manager = entity_manager
     @entity = entity
+    @stage = stage
     @controls = controls
     @states = {}
     
     @position = @entity_manager.get_component @entity, Components::Position
-    
-    self.class.load_image_resource
+        
+    self.class.require_image_resource
     self.class::States.constants.each do |state_name|
       state_class = self.class::States.const_get(state_name)
       @states[state_name.to_s] = state_class.new self
@@ -53,21 +54,13 @@ class Character
   def button_down id
     key_symbol = KEY_SYMBOLS[id]
     control = @controls[key_symbol]
-    control_down control if control
+    @current_state.control_down control if control
   end
   
   def button_up id
     key_symbol = KEY_SYMBOLS[id]
     control = @controls[key_symbol]
-    control_up control if control
-  end
-  
-  def control_down control
-    @current_state.control_down control
-  end
-  
-  def control_up control
-    @current_state.control_up control
+    @current_state.control_up control if control
   end
   
   def on_hit options
@@ -75,15 +68,11 @@ class Character
   end
   
   def set_state state_name, options={}
-    raise "state #{state_name.inspect} doesn't exist for #{self.class}" unless @states.has_key? state_name
-    
+    raise "state #{state_name.inspect} doesn't exist for #{self}" unless @states.has_key? state_name
     
     @state_name = state_name
     new_state = @states[@state_name]
-    prev_state = @current_state
-    
-    #return if new_state == prev_state
-    
+    prev_state = @current_state    
     
     if prev_state
       prev_state.components.each do |component|
@@ -105,7 +94,7 @@ class Character
       @sprite_sheet_paths = Dir[File.join *paths, '*.json']
     end
     
-    def load_image_resource
+    def require_image_resource
       return @image_resource if @image_resource
       @image_resource = {}
     

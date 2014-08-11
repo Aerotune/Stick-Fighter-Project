@@ -5,7 +5,7 @@ class EntityManager
   attr_reader :id, :store
   
   def initialize
-    @id = Identifier.create_id
+    @id = Identifier.create_id.freeze
     ## Structure:
     ## @store = { ComponentClass => {entity => [component_instance]}}
     @store = Hash.new do |store, component_class|
@@ -34,7 +34,7 @@ class EntityManager
   end
   
   def add_component entity, component
-    @components[component.component_id] = component
+    @components[component.id] = component
     components = @store[component.class][entity]
     components << component unless components.include? component
   end
