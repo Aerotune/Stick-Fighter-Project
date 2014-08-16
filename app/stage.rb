@@ -22,7 +22,7 @@ class Stage
     @time = 0
     @live_time = 0
     
-    @font = Gosu::Font.new($window, 'arial', 16)
+    @font = Gosu::Font.new($window, 'Arial', 16)
     
     @entity_manager = EntityManager.new
     #@time_queue = TimeQueue.new
