@@ -1,15 +1,16 @@
-class Commands::SetMovementInLine < Command  
-  def initialize entity_manager, entity, velocity, start_time, options={}
-    @entity_manager = entity_manager
-    @entity = entity
-    @velocity = velocity
-    @start_time = start_time
-    @options = options
+class Commands::SetMovementInAir < Command  
+  def initialize entity_manager, entity, start_velocity_x, start_velocity_y, start_time
+    @entity_manager   = entity_manager
+    @entity           = entity
+    @start_velocity_x = start_velocity_x
+    @start_velocity_y = start_velocity_y
+    @terminal_velocity_x = 0
+    @terminal_velocity_y = 3100
+    @start_time       = start_time
   end
   
   def do_action
     @prev_movement_component = @entity_manager.get_component @entity, Components::Movement
-    position = @entity_manager.get_component @entity, Components::Position
     
     if @prev_movement_component
       @entity_manager.remove_component @entity, @prev_movement_component
@@ -20,31 +21,31 @@ class Commands::SetMovementInLine < Command
       
       case prev_movement
       when MovementInLine
-        start_velocity = prev_movement.velocity(@start_time)
+        @start_velocity_x = prev_movement.velocity(@start_time)
+        @terminal_velocity_x = @start_velocity_x
       when MovementInAir
-        start_velocity = prev_movement.velocity_x(@start_time)
+        @start_velocity_x = prev_movement.velocity_x(@start_time)
+        @terminal_velocity_x = @start_velocity_x
       end
     else
-      
+      position = @entity_manager.get_component @entity, Components::Position
       start_x = position.x
       start_y = position.y
-      start_velocity = 0
       
       @prev_x = start_x
       @prev_y = start_y
     end
     
-    position.next_x = @options['start_x'] if @options['start_x']
-    position.next_y = @options['start_y'] if @options['start_y']
-    
-    @movement = MovementInLine.new \
+    @movement = MovementInAir.new \
       'start_time' => @start_time,
-      'start_x' => @options['start_x'] || start_x,
-      'start_y' => @options['start_y'] || start_y,
-      'start_velocity' => start_velocity,
-      'terminal_velocity' => @velocity,
-      'default_transition_time' => 0.28,
+      'start_x' => start_x,
+      'start_y' => start_y,
+      'start_velocity_x'    => @start_velocity_x,
+      'terminal_velocity_x' => @terminal_velocity_x,
+      'start_velocity_y'    => @start_velocity_y,
+      'terminal_velocity_y' => @terminal_velocity_y,
       'angle' => 0
+    
     
     @movement_component = Components::Movement.new(@movement)
     @entity_manager.add_component @entity, @movement_component

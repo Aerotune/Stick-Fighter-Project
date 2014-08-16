@@ -8,17 +8,21 @@ Dir[File.join(File.dirname(__FILE__), *%w[app *.rb])]    .each { |file| require 
 
 class Window < Gosu::Window
   def initialize
-    $window = super 1000, 600, false, 16.6666
+    $window = super 1000, 600, false#, 16.6666
     @stage = Stage.new
     
     #Shaders.load
+  end
+  
+  def reset_stage
+    @stage = Stage.new
   end
   
   def button_down id
     @stage.button_down id
   end
   
-  def button_up id
+  def button_up id 
     @stage.button_up id
   end
   
@@ -28,12 +32,7 @@ class Window < Gosu::Window
   
   def draw
     fill 0xFF557BC6, 0xFF4F91ED
-    
-    scale = 0.6
-    scale scale, scale, width/2.0, height do
-      @stage.draw
-      #Systems::HitTest.draw @entity_manager
-    end
+    @stage.draw
   end
   
   def fill c1, c2=c1, c3=c2, c4=c3

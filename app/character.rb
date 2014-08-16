@@ -1,7 +1,8 @@
 class Character
   Dir[File.join(File.dirname(__FILE__), *%w[character *.rb])].each { |file| require file }
   
-  attr_reader :controls, :state_name, :states, :entity_manager, :entity, :stage
+  attr_accessor :hit_level_up, :hit_level_down
+  attr_reader :controls, :state_name, :states, :entity_manager, :entity, :stage, :current_state, :time_queue
   
   def initialize entity_manager, entity, stage, controls
     @entity_manager = entity_manager
@@ -10,8 +11,8 @@ class Character
     @controls = controls
     @states = {}
     
-    @position = @entity_manager.get_component @entity, Components::Position
-        
+    @time_queue = TimeQueue.new
+            
     self.class.require_image_resource
     self.class::States.constants.each do |state_name|
       state_class = self.class::States.const_get(state_name)
@@ -19,8 +20,17 @@ class Character
     end
   end
   
-  def update
-    @current_state.update
+  def update time
+    @time = time
+    @time_queue.set_time! time
+  end
+  
+  def time
+    @time
+  end
+  
+  def update_game_logic time
+    @current_state.update_game_logic time if @current_state
   end
   
   def get_component component_class
@@ -35,56 +45,16 @@ class Character
     @entity_manager.remove_component @entity, component
   end
   
-  def x
-    @position.x
+  def control_down control
+    @current_state.control_down control if @current_state.respond_to? :control_down
   end
   
-  def y
-    @position.y
-  end
-  
-  def x= x
-    @position.x = x
-  end
-  
-  def y= y
-    @position.y = y
-  end
-  
-  def button_down id
-    key_symbol = KEY_SYMBOLS[id]
-    control = @controls[key_symbol]
-    @current_state.control_down control if control
-  end
-  
-  def button_up id
-    key_symbol = KEY_SYMBOLS[id]
-    control = @controls[key_symbol]
-    @current_state.control_up control if control
+  def control_up control
+    @current_state.control_up control if @current_state.respond_to? :control_up
   end
   
   def on_hit options
     @current_state.on_hit options
-  end
-  
-  def set_state state_name, options={}
-    raise "state #{state_name.inspect} doesn't exist for #{self}" unless @states.has_key? state_name
-    
-    @state_name = state_name
-    new_state = @states[@state_name]
-    prev_state = @current_state    
-    
-    if prev_state
-      prev_state.components.each do |component|
-        @entity_manager.remove_component @entity, component
-      end
-      prev_state.on_unset
-    end
-    @current_state = new_state
-    @current_state.components.each do |component|
-      @entity_manager.add_component @entity, component
-    end
-    @current_state.on_set options
   end
   
   class << self

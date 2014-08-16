@@ -24,7 +24,7 @@ class Characters::Stick1V2::States::PreBlockLeft < Character::State
     end
   end
   
-  def update
+  def update_game_logic time
     if @sprite.done?
       case @sprite.mode
       when "forward"

@@ -1,47 +1,25 @@
-class Characters::Stick1V2::States::RunRight < Character::State
-  attr_reader :components
-  
+class Characters::Stick1V2::States::RunRight < Character::State  
   def initialize character
     @character = character
-    @sprite = Components::Sprite.new(@character.class.image_resource['run_loop'].merge('factor_x' => -1, 'fps' => 30))
-    @components = [
-      @sprite
-    ]
-    
-    @punch_trigger = {
-      'left' => "PunchedFrontRight",
-      'right' => "PunchedBehindRight"
-    }
+    @sprite_sheet_id = 'run_loop'
+    @sprite_options = {'factor_x' => -1, 'fps' => 30}
+    @movement_options = {'on_surface' => true, 'velocity' => 720}
   end
-  
-  def update
-    @character.x += 12
-  end
-  
-  def on_set options
-    @sprite.index = 11
-  end
-  
-  #def on_set_events(time)
-  #  set_movement_command = Commands::SetMovementInLine.new(@character.entity_manager, @character.entity, 720, time)
-  #  set_movement_command = Commands::SetSprite.new(@character.entity_manager, @character.entity, @character.class.image_resource['run_loop'].merge('factor_x' => -1, 'fps' => 30))
-  #  
-  #  [TimeQueue::Event.new(time, command)]
-  #end
   
   def control_down control
     case control
-    when 'move up'
-      set_state "JumpRight"
-    when 'attack punch', 'attack jab'
-      set_state "RunningAttackRight"
+    when 'move left' ; set_state "SlideRight"
+    when 'move up'   ; set_state "JumpRight"      
     end
   end
   
-  def control_up control
-    case control
-    when 'move right'
-      set_state "SlideRight"
+  def update_game_logic time 
+    return set_state "InAirRight" unless @character.hit_level_down
+    if controls.control_down?('move right')
+      set_velocity time, 720
+    else
+      set_velocity time, 0
+      set_state "IdleRight" if velocity_x(time) < 50
     end
   end
 end

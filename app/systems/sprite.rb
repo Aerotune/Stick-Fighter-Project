@@ -1,24 +1,25 @@
 module Systems::Sprite
   class << self
     
-    def update entity_manager
+    def update entity_manager, time
       entity_manager.each_entity_with_components Components::Sprite do |entity, sprites|
         sprites.each do |sprite|
+          sprite_time = time - sprite.start_time
           case sprite.mode
           when "forward"
-            sprite.index = sprite.index + sprite.fps/60.0
+            sprite.index = sprite_time * sprite.fps
             if sprite.index > sprite.images.length-1
               sprite.index = sprite.images.length-1
             end
             sprite.image = sprite.images[sprite.index]
           when "backward"
-            sprite.index = sprite.index - sprite.fps/60.0
+            sprite.index = sprite.index - sprite_time * sprite.fps
             if sprite.index < 0
               sprite.index = 0
             end
             sprite.image = sprite.images[sprite.index]
           when "loop"
-            sprite.index = (sprite.index + sprite.fps/60.0) % sprite.images.length
+            sprite.index = (sprite_time * sprite.fps) % sprite.images.length
             sprite.image = sprite.images[sprite.index]
           end
           
@@ -36,8 +37,8 @@ module Systems::Sprite
             y = position.y
             z = 0
             angle = 0
-            center_x = image_component.center_x / image_component.image.width
-            center_y = image_component.center_y / image_component.image.height
+            center_x = image_component.center_x.to_f / image_component.image.width
+            center_y = image_component.center_y.to_f / image_component.image.height
             factor_x = image_component.factor_x
             if tint
               Shaders.tint[:color] = tint.color
@@ -60,8 +61,8 @@ module Systems::Sprite
             y = position.y
             z = 0
             angle = 0
-            center_x = sprite.center_x / sprite.images.first.width
-            center_y = sprite.center_y / sprite.images.first.height
+            center_x = sprite.center_x.to_f / sprite.images.first.width
+            center_y = sprite.center_y.to_f / sprite.images.first.height
             factor_x = sprite.factor_x
             
             if tint

@@ -5,12 +5,12 @@ module Systems::HitTest
   end
   
   def self.update entity_manager
-    entity_manager.each_entity_with_component Components::HitBox do |entity, hit_box|
-      position = entity_manager.get_component entity, Components::Position
-      
-      hit_box.x = position.x - hit_box.width / 2.0
-      hit_box.y = position.y - hit_box.height
-    end
+    #entity_manager.each_entity_with_component Components::HitBox do |entity, hit_box|
+    #  position = entity_manager.get_component entity, Components::Position
+    #  
+    #  hit_box.x = position.x - hit_box.width / 2.0
+    #  hit_box.y = position.y - hit_box.height
+    #end
     
     
     
@@ -19,10 +19,10 @@ module Systems::HitTest
       punch_hit_boxes.each do |punch_hit_box|
         entity_manager.each_entity_with_component Components::HitBox do |hit_box_entity, hit_box|
           next if hit_box_entity == punching_entity
-          if boxes_hit? punch_hit_box, hit_box
-            entity_manager.remove_component punching_entity, punch_hit_box
-            $characters[hit_box_entity].on_hit 'punch_direction' => punch_hit_box.punch_direction
-          end
+          #if boxes_hit? punch_hit_box, hit_box
+          #  entity_manager.remove_component punching_entity, punch_hit_box
+          #  $characters[hit_box_entity].on_hit 'punch_direction' => punch_hit_box.punch_direction
+          #end
         end
       end
     end
@@ -32,20 +32,25 @@ module Systems::HitTest
   
   def self.draw entity_manager
     entity_manager.each_entity_with_components Components::HitBox do |entity, hit_boxes|
+      position = entity_manager.get_component entity, Components::Position
+      
       hit_boxes.each do |hit_box|
+        hit_box_x = position.x + hit_box.offset_x
+        hit_box_y = position.y + hit_box.offset_y
+        
         c = 0x44FF0000
         $window.draw_quad \
-          hit_box.x,
-          hit_box.y,
+          hit_box_x,
+          hit_box_y,
           c,
-          hit_box.x+hit_box.width,
-          hit_box.y,
+          hit_box_x+hit_box.width,
+          hit_box_y,
           c,
-          hit_box.x+hit_box.width,
-          hit_box.y+hit_box.height,
+          hit_box_x+hit_box.width,
+          hit_box_y+hit_box.height,
           c,
-          hit_box.x,
-          hit_box.y+hit_box.height,
+          hit_box_x,
+          hit_box_y+hit_box.height,
           c
       end
     end

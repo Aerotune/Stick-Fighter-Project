@@ -15,7 +15,7 @@ class Characters::Stick1V2::States::PunchedFrontRight < Character::State
     }
   end
   
-  def update
+  def update_game_logic time
     @character.x -= 0.25
     if Time.now.to_f - @time_set > @duration
       if controls.control_down? 'move right'

@@ -1,44 +1,40 @@
 class Characters::Stick1V2::States::SlideLeft < Character::State
-  attr_reader :components
   
   def initialize character
     @character = character
-    @sprite = Components::Sprite.new(@character.class.image_resource['slide'].merge 'factor_x' => 1, 'fps' => 45)
-    @components = [
-      @sprite
-    ]
-    
-    @punch_trigger = {
-      'left' => "PunchedBehindLeft",
-      'right' => "PunchedFrontLeft"
-    }
-  end
-  
-  def update
-    if @sprite.index.to_i == @sprite.images.length - 1
-      if controls.control_down? 'move right'
-        set_state "RunRight"
-      elsif controls.control_down? 'block'
-        set_state "PreBlockLeft"
-      else
-        set_state @next_state
-      end
-    end
-    @character.x -= 1.5
+    @duration = 0.2
+    @sprite_sheet_id = 'slide'
+    @sprite_options = {'factor_x' => 1, 'duration' => @duration, 'mode' => 'forward'}
+    @movement_options = {'on_surface' => true, 'velocity' => 0}
   end
   
   def control_down control
+    current_velocity_x = velocity_x(@character.time)
     case control
-    when 'move left'; set_state "RunLeft"
-    when 'attack punch';  @next_state = "PunchLeft"
-    when 'attack jab';    @next_state = "JabLeft"
+    when 'move left'
+      set_state "RunLeft" if current_velocity_x < 0
     when 'move up'
       set_state "JumpLeft"
     end
   end
   
-  def on_set options
-    @next_state = "IdleLeft"
-    @sprite.index = 0
+  def update_game_logic time
+    return set_state "InAirLeft" unless @character.hit_level_down
+    
+    local_time = time - @state_set_time
+    
+    if controls.control_down?('move right')
+      set_velocity time, 720
+    end
+    
+    if local_time >= @duration
+      if controls.control_down?('move left')
+        set_state "RunLeft"
+      elsif controls.control_down?('move right')
+        set_state "RunRight"
+      else
+        set_state "IdleLeft"
+      end
+    end
   end
 end

@@ -26,13 +26,37 @@ class TimeQueue
     current_events["do"].each do |event|
       event.command.do!
     end
+    
+    @current_time = new_time
   end
   
-  def add_command time, command
-    raise AddingEventsToThePastError if @current_time > time
-    @sorted = false
-    @future_events << Event.new(time, command)
+  def add time, command
+    event = TimeQueue::Event.new(time, command)
+    add_events event
   end
+  
+  def add_events *events
+    events_to_do = []
+    events.each do |event|
+      #raise AddingEventsToThePastError if @current_time > event.time
+      if event.time <= @current_time
+        events_to_do << event
+      else
+        @future_events << event
+      end
+    end
+    events_to_do.sort! { |event_1, event_2| event_1.time <=> event_2.time }
+    events_to_do.each do |event|
+      event.command.do!
+    end
+    @past_events.push *events_to_do
+  end
+  
+  #def add_event time, command
+  #  raise AddingEventsToThePastError if @current_time > time
+  #  @sorted = false
+  #  @future_events << Event.new(time, command)
+  #end
   
   
   private
@@ -48,23 +72,20 @@ class TimeQueue
   def pop_current_events new_time    
     sort!
     
-    if new_time > @current_time
+    if new_time >= @current_time
       # Moving forward in time!
-      @current_time = new_time
-      return {'do' => pop_future_events, 'undo' => []}
+      return {'do' => pop_future_events(new_time), 'undo' => []}
     elsif new_time < @current_time
       # Moving back in time!
-      @current_time = new_time      
-      return {'do' => [], 'undo' => pop_past_events}
+      return {'do' => [], 'undo' => pop_past_events(new_time)}
     else
-      # Already called before with the same time
       return {'do' => [], 'undo' => []}
     end
   end
   
-  def pop_future_events
+  def pop_future_events new_time
     last_index = 0
-    last_index += 1 while @future_events[last_index] && @current_time >= @future_events[last_index].time
+    last_index += 1 while @future_events[last_index] && new_time >= @future_events[last_index].time
     range = 0 ... last_index
     
     current_events = @future_events[range]
@@ -73,9 +94,9 @@ class TimeQueue
     current_events
   end
   
-  def pop_past_events
+  def pop_past_events new_time
     begin_index = @past_events.length
-    begin_index -= 1 while begin_index > 0 && @past_events[begin_index-1] && @current_time < @past_events[begin_index-1].time      
+    begin_index -= 1 while begin_index > 0 && @past_events[begin_index-1] && new_time < @past_events[begin_index-1].time      
     range = begin_index ... @past_events.length
     
     current_events = @past_events[range]

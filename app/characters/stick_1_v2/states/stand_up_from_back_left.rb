@@ -9,7 +9,7 @@ class Characters::Stick1V2::States::StandUpFromBackLeft < Character::State
     ]
   end
   
-  def update
+  def update_game_logic time
     if @sprite.done?
       set_state "IdleLeft"
     end

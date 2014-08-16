@@ -3,60 +3,47 @@ class Characters::Stick1V2::States::InAirRight < Character::State
   
   def initialize character
     @character = character
-    @sprite = Components::Sprite.new @character.class.image_resource['pre_land'].merge('factor_x' => -1, 'fps' => 0, 'mode' => "forward")
-      
-    @components = [
-      @sprite
-    ]
-    @vel_x = 0
+    @sprite_sheet_id = 'pre_land'
+    @sprite_options = {'factor_x' => -1, 'fps' => 34, 'mode' => "forward"}
+    @movement_options = {'on_surface' => false}
   end
   
-  def update
-    if controls.control_down? 'move up'
-      @velocity += @acceleration*0.4
-    elsif controls.control_down? 'move down'
-      @velocity += @acceleration*1.5
-    else
-      @velocity += @acceleration
-    end
-    @sprite.fps = @velocity < -5 ? 0 : 27
-    @character.y += @velocity
-    
-    @character.x += @vel_x
-    if @character.y > 500
-      @character.y = 500
-      set_state "LandRight", 'velocity_x' => @vel_x*0.3
+  def control_up control
+    case control
+    when 'move up'
+      set_in_air_transition_time_y @character.time, 1.115
     end
   end
   
   def control_down control
     case control
-    when 'move right'
-      @vel_x = 12
-    when 'move left'
-      @vel_x = -5
+    when 'move down'
+      set_in_air_transition_time_y @character.time, 0.547
     end
   end
   
-  def control_up control
-    case control
-    when 'move right'
-      @vel_x = controls.control_down?('move left') ? -5 : 0
-    when 'move left'
-      @vel_x = controls.control_down?('move right') ? 12 : 0
+  def update_game_logic time    
+    if @character.hit_level_down
+      set_state "LandRight", 'start_y' => @character.hit_level_down
+    else
+      case controls.latest_horizontal_move
+      when 'move right'
+        set_in_air_velocity_x time, 720
+      when 'move left'
+        set_in_air_velocity_x time, -720
+      else
+        set_in_air_velocity_x time, 0
+      end
+      
+      #if controls.control_down?('move up')
+      #  set_in_air_transition_time_y time, 2.83
+      #else
+      #  set_in_air_transition_time_y time, 0.947
+      #end
+      
+      #if velocity_y(time) > 0
+      #  update_sprite time, 'fps' => 27
+      #end
     end
-  end
-  
-  def on_hit options
-  end
-  
-  def on_set options
-    @velocity = -20
-    @acceleration = 1.8
-    @sprite.index = 0
-    @vel_x = 0
-    @vel_x = -5 if controls.control_down? 'move left'
-    @vel_x = 12 if controls.control_down? 'move right'
-    
   end
 end

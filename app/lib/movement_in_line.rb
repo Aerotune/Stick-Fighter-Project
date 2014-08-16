@@ -54,15 +54,21 @@ class MovementInLine
   end
   
   def velocity time
-    @easer.value(time)
+    @easer.value(time - @start_time)
   end
   
- def start_velocity
-   @easer.start_value
- end
- 
- def terminal_velocity
-   @easer.end_value
- end
+  alias :velocity_x :velocity
+  
+  def velocity_y time
+    0
+  end
+  
+  def start_velocity
+    @easer.start_value
+  end
+  
+  def terminal_velocity
+    @easer.end_value
+  end
   
 end

@@ -1,6 +1,4 @@
 module Factories::Player
-  $characters = {}
-  
   def self.construct entity_manager, stage, x, y, controls, tint_color, initial_state="IdleRight"
     entity = entity_manager.create_entity
     
@@ -8,15 +6,17 @@ module Factories::Player
     #tint = Components::Tint.new(tint_color)
     hit_box_width = 60
     hit_box_height = 200
-    hit_box = Components::HitBox.new(x-hit_box_width/2.0, y-hit_box_height, hit_box_width, hit_box_height)
+    hit_box = Components::HitBox.new(-hit_box_width/2.0, -hit_box_height, hit_box_width, hit_box_height)
     
     entity_manager.add_component entity, position
     #entity_manager.add_component entity, tint
     entity_manager.add_component entity, hit_box
     
-    character = Characters::Stick1V2.new entity_manager, entity, stage, Settings::CONTROLS[controls]
-    character.set_state initial_state
-    $characters[entity] = character
+    controls = Settings::CONTROLS[controls]
+    
+    character = Characters::Stick1V2.new entity_manager, entity, stage, controls
+    Commands::SetState.new(character, initial_state, stage.time).do!
+    controls.add_listener character
     character
   end
 end

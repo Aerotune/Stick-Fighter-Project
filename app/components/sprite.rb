@@ -1,7 +1,8 @@
 class Components::Sprite < Component
-  attr_accessor :name, :center_x, :center_y, :images, :factor_x, :fps, :mode, :image, :index, :done
+  attr_accessor :start_time, :name, :center_x, :center_y, :images, :factor_x, :fps, :mode, :image, :index, :done
   
   def initialize options
+    @start_time = options["start_time"]
     @name     = options["name"]
     @center_x = options["center_x"]
     @center_y = options["center_y"]

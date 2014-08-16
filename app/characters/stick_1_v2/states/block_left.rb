@@ -14,7 +14,7 @@ class Characters::Stick1V2::States::BlockLeft < Character::State
     @sprite.index = 0
   end
   
-  def update
+  def update_game_logic time
     
   end
   

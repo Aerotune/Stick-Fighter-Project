@@ -3,41 +3,46 @@ class Characters::Stick1V2::States::JumpLeft < Character::State
   
   def initialize character
     @character = character
-    @sprite = Components::Sprite.new(@character.class.image_resource['jump'].merge 'factor_x' => 1, 'fps' => 45, 'mode' => "forward")
-    @components = [
-      @sprite
-    ]
-    @duration = @sprite.images.length / @sprite.fps.to_f
-    @vel_x = 0
-    
-    @punch_trigger = {
-      'left' => "PunchedBehindLeft",
-      'right' => "PunchedFrontLeft"
-    }
+    @duration = 0.3
+    @sprite_sheet_id = 'jump'
+    @sprite_options = {'factor_x' => 1, 'duration' => @duration, 'mode' => "forward"}
+    @movement_options = {'on_surface' => false, 'start_velocity_y' => -1600}
   end
   
-  def update
-    time_passed = Time.now.to_f - @time_set
+  def control_up control
+    case control
+    when 'move up'
+      set_in_air_transition_time_y @character.time, 1.115
+    end
+  end
+  
+  def control_down control
+    case control
+    when 'move down'
+      set_in_air_transition_time_y @character.time, 0.547
+    end
+  end
+  
+  def update_game_logic time
+    local_time = time - @state_set_time
     
-    if time_passed >= @duration
-      set_state "InAirLeft"
-    elsif time_passed > @duration/2.0
-      @character.y -= 20
+    case controls.latest_horizontal_move
+    when 'move right'
+      set_in_air_velocity_x time, 720
+    when 'move left'
+      set_in_air_velocity_x time, -720
+    else
+      set_in_air_velocity_x time, 0
     end
     
-    @vel_x = 0
-    @vel_x = 5 if controls.control_down? 'move right'
-    @vel_x = -12 if controls.control_down? 'move left'
-    @character.x += @vel_x
-    #@velocity += @acceleration
-    #@character.y += @velocity
-  end
-  
-  def on_set options
-    @time_set = Time.now.to_f
-    @sprite.index = 0
-    #@vel_x = 0
-    #@vel_x = 12 if controls.control_down? 'move right'
-    #@vel_x = -12 if controls.control_down? 'move right'
+    #if controls.control_down?('move up')
+    #  set_in_air_transition_time_y time, 2.83
+    #else
+    #  set_in_air_transition_time_y time, 0.947
+    #end
+    
+    if local_time >= @duration
+      set_state "InAirLeft"
+    end
   end
 end

@@ -15,7 +15,7 @@ class Characters::Stick1V2::States::JabRight < Character::State
     }
   end
   
-  def update
+  def update_game_logic time
     @character.x += 0.25
     time_passed = Time.now.to_f - @time_set
     if time_passed > @duration

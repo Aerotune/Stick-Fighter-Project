@@ -9,7 +9,7 @@ class Characters::Stick1V2::States::RunningAttackLeft < Character::State
     ]
   end
   
-  def update
+  def update_game_logic time
     case @sprite.progress
     when 0..0.3
       @character.x -= 12

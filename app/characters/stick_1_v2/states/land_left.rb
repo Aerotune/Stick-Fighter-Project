@@ -1,53 +1,63 @@
-class Characters::Stick1V2::States::LandLeft < Character::State
-  attr_reader :components
-  
+class Characters::Stick1V2::States::LandLeft < Character::State  
   def initialize character
     @character = character
-    @sprite = Components::Sprite.new(@character.class.image_resource['land'].merge 'factor_x' => 1, 'fps' => 60, 'mode' => "forward")
-    @components = [
-      @sprite
-    ]
-    @duration = @sprite.images.length / @sprite.fps.to_f
-    @punch_trigger = {
-      'left' => "PunchedBehindLeft",
-      'right' => "PunchedFrontLeft"
-    }
-  end
-  
-  def update    
-    if @sprite.done?
-      if controls.control_down? 'move left'
-        if @next_state == "JumpLeft"
-          set_state @next_state
-        else
-          set_state "RunLeft"
-        end
-      elsif controls.control_down? 'move right'
-        set_state "RunRight"
-      else
-        set_state @next_state
-      end
-    end
-    
-    @character.x += @vel_x
-    #@velocity += @acceleration
-    #@character.y += @velocity
+    @duration = 0.18
+    @sprite_sheet_id = 'land'
+    @sprite_options = {'factor_x' => 1, 'duration' => @duration}
+    @movement_options = {'on_surface' => true, 'velocity' => 0}
   end
   
   def control_down control
+    local_time = @character.time - @state_set_time
+    
     case control
-    when 'attack punch'
-      @next_state = "PunchLeft"
-    when 'attack jab'
-      @next_state = "JabLeft"
     when 'move up'
-      @next_state = "JumpLeft"
+      set_state "JumpLeft" if local_time > @duration / 2.6
     end
   end
   
-  def on_set options
-    @vel_x = options['velocity_x'].to_f
-    @sprite.index = 0
-    @next_state = "IdleLeft"
+  def update_game_logic time
+    return set_state "InAirLeft" unless @character.hit_level_down
+    
+    local_time = time - @state_set_time
+    current_velocity_x = velocity_x(time)
+    
+    if local_time > @duration
+      
+      case controls.latest_horizontal_move
+      when 'move right'
+        if current_velocity_x.abs > 60
+          set_state "SlideLeft"
+        else
+          set_state "RunRight"
+        end
+      when 'move left'
+        if current_velocity_x > 0
+          set_state "SlideLeft"
+        else
+          set_state "RunLeft"
+        end
+      else
+        if current_velocity_x > 60
+          set_state "SlideLeft"
+        elsif current_velocity_x < -60
+          set_state "SlideLeft"
+        else
+          set_state "IdleLeft"
+        end
+      end
+      
+    else
+      
+      case controls.latest_horizontal_move
+      when 'move right'
+        set_velocity time, 720
+      when 'move left'
+        set_velocity time, -720
+      else
+        set_velocity time, 0
+      end
+      
+    end
   end
 end
