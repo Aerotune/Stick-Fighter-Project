@@ -1,19 +1,14 @@
 module Factories::PunchHitBox
-  def self.construct character, punch_direction
-    width  = 70
-    height = 50
+  def self.construct character, punch_direction, options
+    width  = options['width']    || 70
+    height = options['height']   || 50
+    offset = options['offset_x'] || 50
     case punch_direction
-    when "right"; offset_x = 38
-    when "left";  offset_x = -(38 + width)      
+    when "right"; offset_x = offset
+    when "left";  offset_x = -(offset + width)      
     end
-    offset_y = -151
-    x = character.x + offset_x
-    y = character.y + offset_y
+    offset_y = options['offset_y'] || -151
     
-    punch_hit_box = Components::PunchHitBox.new(punch_direction, x, y, width, height)
-    
-    
-    character.add_component punch_hit_box
-    punch_hit_box
+    Components::PunchHitBox.new(punch_direction, offset_x, offset_y, width, height)
   end
 end

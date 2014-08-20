@@ -54,7 +54,7 @@ class Character
   end
   
   def on_hit options
-    @current_state.on_hit options
+    @current_state.on_hit options if @current_state.respond_to? :on_hit
   end
   
   class << self

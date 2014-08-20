@@ -8,8 +8,14 @@ class Characters::Stick1V2::States::RunLeft < Character::State
   
   def control_down control
     case control
-    when 'move right'; set_state "SlideLeft"
-    when 'move up'   ; set_state "JumpLeft"      
+    when 'move right'; set_state "SlideLeft", 'next_state' => "RunRight"
+    when 'move up'   ; set_state "JumpLeft"   
+    when 'attack punch'
+      if controls.control_down? 'move left'
+        set_state "RunningAttackLeft"
+      else
+        set_state "PunchLeft"
+      end   
     end
   end
   

@@ -1,5 +1,6 @@
+require 'rubygems'
 require 'gosu'
-#require 'ashton'
+require 'ashton'
 require_relative 'shaders'
 require_relative 'settings'
 
@@ -7,11 +8,18 @@ Dir[File.join(File.dirname(__FILE__), *%w[app lib *.rb])].each { |file| require 
 Dir[File.join(File.dirname(__FILE__), *%w[app *.rb])]    .each { |file| require file }
 
 class Window < Gosu::Window
+  attr_reader :blurs
   def initialize
     $window = super 1000, 600, false#, 16.6666
+    #$window = super Gosu.screen_width, Gosu.screen_height, true
     @stage = Stage.new
     
-    #Shaders.load
+    @blur_strength = 0.9
+    
+    @buffer = Ashton::WindowBuffer.new
+    Shaders.load
+    
+    @font = Gosu::Font.new self, "Arial", 16
   end
   
   def reset_stage
@@ -20,6 +28,11 @@ class Window < Gosu::Window
   
   def button_down id
     @stage.button_down id
+    
+    case id
+    when Gosu::KbB
+      @blur_strength += 0.1
+    end
   end
   
   def button_up id 
@@ -28,11 +41,24 @@ class Window < Gosu::Window
   
   def update
     @stage.update
+    @blur_strength = mouse_y / height#(Math.sin(Time.now.to_f*0.5)+1)/2
   end
   
   def draw
-    fill 0xFF557BC6, 0xFF4F91ED
     @stage.draw
+    
+    #blur
+    
+    @font.draw "fps: #{Gosu.fps}", $window.width - 60, 10, 0
+  end
+  
+  def blur
+    @buffer.capture
+    
+    Shaders.set_blur @blur_strength
+    post_process Shaders.blur_horizontal, Shaders.blur_vertical do
+      @buffer.draw 0,0,0
+    end
   end
   
   def fill c1, c2=c1, c3=c2, c4=c3

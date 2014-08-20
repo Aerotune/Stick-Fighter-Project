@@ -29,7 +29,9 @@ class Commands::SetState < Command
     end
     
     @character.instance_variable_set("@current_state", @new_state)
-    
+    if @character.stage.live?
+      @new_state.on_set @options if @new_state.respond_to? :on_set
+    end
     
   end
   

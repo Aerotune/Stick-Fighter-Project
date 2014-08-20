@@ -6,10 +6,23 @@ class Characters::Stick1V2::States::RunRight < Character::State
     @movement_options = {'on_surface' => true, 'velocity' => 720}
   end
   
+  def on_hit options
+    case options['punch_direction']
+    when 'right'; set_state "PunchedBehindRight"
+    when 'left' ; set_state "PunchedFrontRight"
+    end
+  end
+  
   def control_down control
     case control
-    when 'move left' ; set_state "SlideRight"
-    when 'move up'   ; set_state "JumpRight"      
+    when 'move left' ; set_state "SlideRight", 'next_state' => "RunLeft"
+    when 'move up'   ; set_state "JumpRight"
+    when 'attack punch'
+      if controls.control_down? 'move right'
+        set_state "RunningAttackRight"
+      else
+        set_state "PunchRight"
+      end
     end
   end
   

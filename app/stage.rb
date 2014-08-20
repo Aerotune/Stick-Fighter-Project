@@ -30,8 +30,12 @@ class Stage
     @players = {}
     @level_objects = []
     
-    add_player 'player1', 500, 200, "IdleRight", [0.5, 0, 0]
-    #add_player 'player2', 200, 200, "IdleLeft", [0, 0, 0.5]
+    add_player 'player2', 1500, 1600, "IdleRight", [0.2, 0.0, 0.4]
+    add_player 'player1', 2500, 1600, "IdleLeft", [0.4, 0.05, 0.0]
+  end
+  
+  def live?
+    @time >= @live_time
   end
   
   #def add_events *events
@@ -86,6 +90,15 @@ class Stage
   end
   
   def update_game_logic time
+    Systems::HitTest.update @entity_manager, @characters
+    
+    @characters.values.each do |character|
+      position = character.get_component(Components::Position)
+      if position.y > 4000
+        $window.reset_stage
+      end
+    end
+    
     @players.each do |player_control_id, player|
       hit_box  = player.get_component Components::HitBox
       position = player.get_component Components::Position
@@ -119,24 +132,23 @@ class Stage
   end
   
   def draw
-    position = @characters.values.first.get_component(Components::Position)
-    if position.y > 4000
-      $window.reset_stage
-    end
-    $window.scale 0.45, 0.45, $window.width/2, $window.height/2 do
-      $window.translate -position.x+$window.width/2, -position.y+$window.height/3*2 do
-        
+    $window.fill 0xFF557BC6, 0xFF4F91ED
+    $window.scale 0.32, 0.32, -100, -50 do
+    #$window.scale 0.45, 0.45, $window.width/2, $window.height/2 do
+      #$window.translate -position.x+$window.width/2, -position.y+$window.height/3*2 do          
         @level.draw
         Systems::Sprite.draw @entity_manager
-      end
+        #Systems::HitTest.draw @entity_manager # for some reason this stops $window.blur from working
+      #end
     end
-    if @time < @live_time
+    
+    unless live?
       if $window.button_down? Gosu::KbSpace
         @font.draw "REPLAY <<", 10, 10, 0
       else
         @font.draw "REPLAY >>", 10, 10, 0
       end
     end
-    #Systems::HitTest.draw @entity_manager
+    
   end
 end

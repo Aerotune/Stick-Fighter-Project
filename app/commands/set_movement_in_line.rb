@@ -15,33 +15,34 @@ class Commands::SetMovementInLine < Command
       @entity_manager.remove_component @entity, @prev_movement_component
       prev_movement = @prev_movement_component.movement
       prev_movement.update(@start_time)
-      start_x = prev_movement.x
-      start_y = prev_movement.y
+      @start_x ||= @options['start_x'] || prev_movement.x
+      @start_y ||= @options['start_y'] || prev_movement.y
       
       case prev_movement
       when MovementInLine
-        start_velocity = prev_movement.velocity(@start_time)
+        @start_velocity ||= prev_movement.velocity(@start_time)
       when MovementInAir
-        start_velocity = prev_movement.velocity_x(@start_time)
+        @start_velocity ||= prev_movement.velocity_x(@start_time)
       end
     else
       
-      start_x = position.x
-      start_y = position.y
+      @prev_x  ||= position.x
+      @prev_y  ||= position.y
+      @start_x ||= @options['start_x'] || @prev_x
+      @start_y ||= @options['start_y'] || @prev_y
       start_velocity = 0
       
-      @prev_x = start_x
-      @prev_y = start_y
+      
     end
     
-    position.next_x = @options['start_x'] if @options['start_x']
-    position.next_y = @options['start_y'] if @options['start_y']
+    position.next_x = @start_x #if @options['start_x']
+    position.next_y = @start_y #if @options['start_y']
     
     @movement = MovementInLine.new \
       'start_time' => @start_time,
-      'start_x' => @options['start_x'] || start_x,
-      'start_y' => @options['start_y'] || start_y,
-      'start_velocity' => start_velocity,
+      'start_x' => @options['start_x'] || @start_x,
+      'start_y' => @options['start_y'] || @start_y,
+      'start_velocity' => @start_velocity,
       'terminal_velocity' => @velocity,
       'default_transition_time' => 0.28,
       'angle' => 0

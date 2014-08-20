@@ -7,6 +7,13 @@ class Characters::Stick1V2::States::LandRight < Character::State
     @movement_options = {'on_surface' => true, 'velocity' => 0}
   end
   
+  def on_hit options
+    case options['punch_direction']
+    when 'right'; set_state "PunchedBehindRight"
+    when 'left' ; set_state "PunchedFrontRight"
+    end
+  end
+  
   def control_down control
     local_time = @character.time - @state_set_time
     

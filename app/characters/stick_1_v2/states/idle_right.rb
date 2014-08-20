@@ -9,10 +9,9 @@ class Characters::Stick1V2::States::IdleRight < Character::State
       'control_down' => {
         'move right' => "RunRight",
         'move left' => "RunLeft",
-        'move up' => "JumpRight"#,
-        #'attack punch' => "PunchRight",
-        #'attack jab' => "JabRight",
-        #'block' => "PreBlockRight"
+        'move up' => "JumpRight",
+        'attack punch' => "PunchRight",
+        'block' => "PreBlockRight"
       }
     }
   end
@@ -24,5 +23,12 @@ class Characters::Stick1V2::States::IdleRight < Character::State
   
   def update_game_logic time
     return set_state "InAirRight" unless @character.hit_level_down
+  end
+  
+  def on_hit options
+    case options['punch_direction']
+    when 'right'; set_state "PunchedBehindRight"
+    when 'left' ; set_state "PunchedFrontRight"
+    end
   end
 end

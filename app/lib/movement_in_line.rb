@@ -13,7 +13,7 @@ class MovementInLine
     @factor_y                = Math.sin(@angle)
     @easer_class             = QuadraticOutEaser
     
-    @easer = @easer_class.new @default_transition_time, options["start_velocity"], options["terminal_velocity"]
+    @easer = @easer_class.new @default_transition_time, options["start_velocity"].to_f, options["terminal_velocity"]
   end
   
   def update time

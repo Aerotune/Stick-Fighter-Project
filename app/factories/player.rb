@@ -3,13 +3,13 @@ module Factories::Player
     entity = entity_manager.create_entity
     
     position = Components::Position.new(x, y)
-    #tint = Components::Tint.new(tint_color)
+    tint = Components::Tint.new(tint_color)
     hit_box_width = 60
     hit_box_height = 200
     hit_box = Components::HitBox.new(-hit_box_width/2.0, -hit_box_height, hit_box_width, hit_box_height)
     
     entity_manager.add_component entity, position
-    #entity_manager.add_component entity, tint
+    entity_manager.add_component entity, tint
     entity_manager.add_component entity, hit_box
     
     controls = Settings::CONTROLS[controls]

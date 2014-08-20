@@ -3,19 +3,34 @@ class Characters::Stick1V2::States::StandUpFromBackLeft < Character::State
   
   def initialize character
     @character = character
-    @sprite = Components::Sprite.new(@character.class.image_resource['stand_up_from_back'].merge 'factor_x' => 1, 'duration' => 0.7, 'mode' => 'forward')
-    @components = [
-      @sprite
-    ]
+    @duration = 0.6
+    @sprite_sheet_id = 'stand_up_from_back'
+    @sprite_options = {'factor_x' => 1, 'duration' => @duration, 'mode' => 'forward'}
+    @movement_options = {'on_surface' => true}
   end
   
   def update_game_logic time
-    if @sprite.done?
+    return set_state "InAirLeft" unless @character.hit_level_down
+    
+    local_time = time - @state_set_time
+    
+    if local_time > @duration
       set_state "IdleLeft"
+    elsif (local_time > @duration - 0.25) && !@has_hit_box
+      @has_hit_box = true
+      @stand_up_hit_box_right = Factories::PunchHitBox.construct @character, 'right', 'offset_x' => 5, 'width' => 65
+      @stand_up_hit_box_left  = Factories::PunchHitBox.construct @character, 'left',  'offset_x' => 5, 'width' => 80
+      @character.add_component @stand_up_hit_box_right
+      @character.add_component @stand_up_hit_box_left
     end
   end
   
   def on_set options
-    @sprite.index = 0
+    @has_hit_box = false
+  end
+  
+  def on_unset
+    @character.remove_component @stand_up_hit_box_right
+    @character.remove_component @stand_up_hit_box_left
   end
 end

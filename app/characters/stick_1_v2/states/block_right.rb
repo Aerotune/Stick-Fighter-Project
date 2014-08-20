@@ -3,51 +3,25 @@ class Characters::Stick1V2::States::BlockRight < Character::State
   
   def initialize character
     @character = character
-    @sprite = Components::Sprite.new(@character.class.image_resource['block'].merge 'factor_x' => -1, 'fps' => 0, 'mode' => "forward")
-    @components = [
-      @sprite
-    ]
-  end
-  
-  def on_set options
-    @sprite.fps = 0
-    @sprite.index = 0
+    @sprite_sheet_id = 'block'
+    @sprite_options = {'factor_x' => -1, 'fps' => 33, 'mode' => "forward"}
+    @movement_options = {'on_surface' => true}
   end
   
   def update_game_logic time
-    
+    return set_state "InAirRight" unless @character.hit_level_down
+    set_state "IdleRight" unless controls.control_down? 'block'
   end
-  
-  def control_down control
-    case control
-    when 'move right'
-      set_state "RunRight"
-    when 'move left'
-      set_state "RunLeft"
-    when 'move up'
-      set_state "JumpRight"
-    when 'attack punch'
-      set_state "PunchRight"
-    when 'attack jab'
-      set_state "JabRight"
-    end
-  end
-  
-  def control_up control
-    case control
-    when 'block'
-      set_state "PreBlockRight", {'mode' => "backward"}
-    end
-  end
-  
   def on_hit options
     case options['punch_direction']
     when 'left'
-      @sprite.index = 1
-      @sprite.fps = 37
-      @character.x -= 2
+      set_state 'BlockRight'
     when 'right'
       set_state 'PunchedBehindRight'
     end
+  end
+  
+  def on_set options
+    ease_position 'distance' => -45, 'transition_time' => 0.2, 'start_time' => @character.time
   end
 end

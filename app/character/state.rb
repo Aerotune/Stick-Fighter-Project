@@ -26,6 +26,9 @@ class Character::State
   #end
   
   def create_set_events time, options={}
+    ['@sprite_sheet_id', '@sprite_options', '@movement_options'].each do |variable|
+      raise "Missing #{variable} for #{self}" unless instance_variable_get variable
+    end
     sprite_settings = @character.class.image_resource[@sprite_sheet_id].merge @sprite_options.merge('start_time' => time)
     @sprite_component = Components::Sprite.new(sprite_settings)
     
@@ -47,7 +50,8 @@ class Character::State
   end
   
   def set_state state_name, options={}
-    time    = @character.stage.time
+    @character.current_state.on_unset if @character.current_state.respond_to? :on_unset
+    time    = @character.time
     command = Commands::SetState.new(@character, state_name, time, options)
     event   = TimeQueue::Event.new time, command
     @character.time_queue.add_events event
@@ -59,6 +63,10 @@ class Character::State
   
   def update_game_logic time
     
+  end
+  
+  def ease_position options
+    @character.time_queue.add @character.time, Commands::SetEaseInLine.new(entity_manager, entity, options)
   end
   
   def velocity_y time
@@ -98,13 +106,16 @@ class Character::State
     end
   end
   
-  def create_punch_hit_box direction
+  def create_punch_hit_box direction, options={}
     return if @punch_hit_box
-    @punch_hit_box = Factories::PunchHitBox.construct @character, direction
+    @punch_hit_box = Factories::PunchHitBox.construct @character, direction, options
+    @character.add_component @punch_hit_box
+    #@character.time_queue.add @character.time, Commands::AddComponent(entity_manager, entity, @punch_hit_box)
   end
   
   def remove_punch_hit_box
     if @punch_hit_box
+      #@character.time_queue.add @character.time, Commands::RemoveComponent(entity_manager, entity, @punch_hit_box)
       @character.remove_component @punch_hit_box
       @punch_hit_box = nil
     end

@@ -1,10 +1,10 @@
-class Characters::Stick1V2::States::PunchedFrontRight < Character::State
+class Characters::Stick1V2::States::StaggerForwardRight < Character::State
   attr_reader :components
   
   def initialize character
     @character = character
-    @duration = 0.4
-    @sprite_sheet_id = 'punched_front'
+    @duration = 0.8
+    @sprite_sheet_id = 'stagger_forward'
     @sprite_options = {'factor_x' => -1, 'duration' => @duration, 'mode' => "forward"}
     @movement_options = {'on_surface' => true}
   end
@@ -19,16 +19,7 @@ class Characters::Stick1V2::States::PunchedFrontRight < Character::State
     end
   end
   
-  def on_hit options
-    case options['punch_direction']
-    when 'right'
-      set_state "PunchedBehindRight"
-    when 'left'
-      if controls.control_down? 'move left'
-        set_state "StaggerBackwardRight"
-      else
-        set_state "FallToBackRight"
-      end
-    end
+  def on_set options
+    ease_position 'distance' => 220, 'transition_time' => @duration, 'start_time' => @character.time
   end
 end

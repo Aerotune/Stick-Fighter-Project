@@ -42,9 +42,9 @@ module Systems::Sprite
             factor_x = image_component.factor_x
             if tint
               Shaders.tint[:color] = tint.color
-              $window.post_process Shaders.tint do
+              #$window.post_process Shaders.tint do
                 image_component.image.draw_rot x, y, z, angle, center_x, center_y, factor_x
-              end
+                #end
             else
               image_component.image.draw_rot x, y, z, angle, center_x, center_y, factor_x
             end

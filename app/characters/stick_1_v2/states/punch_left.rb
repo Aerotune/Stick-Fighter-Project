@@ -3,55 +3,76 @@ class Characters::Stick1V2::States::PunchLeft < Character::State
   
   def initialize character
     @character = character
-    @sprite = Components::Sprite.new(@character.class.image_resource['punch'].merge 'factor_x' => 1, 'duration' => 0.35, 'mode' => "forward")
-    @components = [
-      @sprite
-    ]
-    @duration = @sprite.images.length / @sprite.fps.to_f
-    
-    @punch_trigger = {
-      'left' => "PunchedBehindLeft",
-      'right' => "PunchedFrontLeft"
-    }
+    @duration = 0.33
+    @sprite_sheet_id = 'punch'
+    @sprite_options = {'factor_x' => 1, 'duration' => @duration, 'mode' => "forward"}
+    @movement_options = {'on_surface' => true}
   end
   
-  def update_game_logic time
-    @character.x -= 0.25
-    time_passed = Time.now.to_f - @time_set
-    if time_passed > @duration
-      if controls.control_down? 'move left'
-        set_state "RunLeft"
-      elsif controls.control_down? 'move right'
-        set_state "RunRight"
-      elsif controls.control_down? 'block'
-        set_state "PreBlockLeft"
-      else
-        set_state @next_state
-      end
-    elsif time_passed > @duration / 2.5
-      if time_passed < @duration / 1.5
-        create_punch_hit_box "left"
-      else
-        remove_punch_hit_box
-      end
+  def on_hit options
+    case options['punch_direction']
+    when 'right'; set_state "PunchedFrontLeft"
+    when 'left' ; set_state "PunchedBehindLeft"
     end
   end
   
   def control_down control
     case control
-    when 'attack punch'; @next_state = "PunchLeft"
-    when 'attack jab';   @next_state = "JabLeft"
+    when 'attack punch'
+      @next_state = "JabLeft"
     end
   end
   
-  def on_set options
-    #@hit = false
-    @next_state = "IdleLeft"
-    @time_set = Time.now.to_f
-    @sprite.index = 0
+  def update_game_logic time
+    return set_state "InAirLeft" unless @character.hit_level_down
+    
+    local_time = time - @state_set_time
+    
+    if @can_jab && (local_time < 0.105) && !controls.control_down?('attack punch')
+      set_state "JabLeft"
+    end
+    
+    if @has_punched
+      remove_punch_hit_box if local_time > @duration * 0.5
+    else
+      if local_time > @duration * 0.35
+        @has_punch = true
+        create_punch_hit_box 'left'
+      end
+    end
+    
+    if local_time >= @duration
+      if @next_state.include? "Idle"
+        case controls.latest_horizontal_move
+        when 'move right'; set_state "RunRight"
+        when 'move left';  set_state "RunLeft"
+        else
+          set_state @next_state
+        end
+      else
+        set_state @next_state
+      end
+    else
+      unless @has_moved
+        if controls.control_down? 'move left'
+          @has_moved = true
+          ease_position 'distance' => -60, 'transition_time' => 0.3, 'start_time' => @character.time
+        elsif controls.control_down? 'move right'
+          @has_moved = true
+          ease_position 'distance' => 30, 'transition_time' => 0.225, 'start_time' => @character.time
+        end
+      end
+    end
   end
   
   def on_unset
     remove_punch_hit_box
+  end
+  
+  def on_set options
+    @can_jab = options.has_key?('can_jab') ? options['can_jab'] : true
+    @next_state = "IdleLeft"
+    @has_moved = false
+    @has_punched = false
   end
 end

@@ -3,33 +3,65 @@ class Characters::Stick1V2::States::RunningAttackRight < Character::State
   
   def initialize character
     @character = character
-    @sprite = Components::Sprite.new(@character.class.image_resource['dash_kick'].merge 'factor_x' => -1, 'duration' => 0.6, 'mode' => "forward")
-    @components = [
-      @sprite
-    ]
+    @duration = 0.45
+    @sprite_sheet_id = 'dash_kick'
+    @sprite_options = {'factor_x' => -1, 'duration' => @duration, 'mode' => "forward"}
+    @movement_options = {'on_surface' => true}
   end
   
-  def update_game_logic time
-    case @sprite.progress
-    when 0..0.3
-      @character.x += 12
-    when 0.35..0.45
-      create_punch_hit_box "right"
-    when 0.45..1.0
-      remove_punch_hit_box
-    end
-    
-    if @sprite.done?
-      remove_punch_hit_box
-      set_state "IdleRight"
+  def on_hit options
+    case options['punch_direction']
+    when 'right'; set_state "PunchedBehindRight"
+    when 'left' ; set_state "PunchedFrontRight"
     end
   end
   
-  def on_unset
-    remove_punch_hit_box
+  def control_down control
+    case control
+    when 'attack punch'
+      @attack_after = true
+    end
   end
   
   def on_set options
-    @sprite.index = 0
+    @attack_after = false
+    @has_hit_box  = false
+    ease_position 'distance' => 200, 'transition_time' => 0.4, 'start_time' => @character.time
+  end
+  
+  def update_game_logic time
+    return set_state "InAirRight" unless @character.hit_level_down
+    
+    local_time = time - @state_set_time
+    
+    if @has_hit_box
+      if local_time > @duration * 0.55
+        remove_punch_hit_box
+      end
+    else
+      if local_time > @duration * 0.4
+        @has_hit_box = true
+        create_punch_hit_box 'right', 'offset_x' => 10, 'width' => 100
+      end
+    end
+    
+    if local_time > @duration
+      if @attack_after
+        set_state "PunchRight"
+      else
+        case controls.latest_horizontal_move
+        when 'move right'
+          set_state "RunRight"
+        when 'move left'
+          set_state "RunLeft"
+        else
+          set_state "IdleRight"
+        end
+      end
+    elsif local_time > 0.35
+      if controls.control_down?('move right')
+        set_velocity time, 720
+      end
+    end    
   end
 end

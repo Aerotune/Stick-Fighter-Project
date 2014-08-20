@@ -8,6 +8,13 @@ class Characters::Stick1V2::States::SlideRight < Character::State
     @movement_options = {'on_surface' => true, 'velocity' => 0}
   end
   
+  def on_hit options
+    case options['punch_direction']
+    when 'right'; set_state "PunchedBehindRight"
+    when 'left' ; set_state "PunchedFrontRight"
+    end
+  end
+  
   def control_down control
     current_velocity_x = velocity_x(@character.time)
     case control
@@ -15,6 +22,8 @@ class Characters::Stick1V2::States::SlideRight < Character::State
       set_state "RunRight" if current_velocity_x > 0
     when 'move up'
       set_state "JumpRight"
+    when 'attack punch'
+      set_state "PunchRight"
     end
   end
   
@@ -25,6 +34,8 @@ class Characters::Stick1V2::States::SlideRight < Character::State
     
     if controls.control_down?('move left')
       set_velocity time, -720
+    else
+      set_velocity time, 0
     end
     
     if local_time >= @duration
@@ -33,8 +44,12 @@ class Characters::Stick1V2::States::SlideRight < Character::State
       elsif controls.control_down?('move left')
         set_state "RunLeft"
       else
-        set_state "IdleRight"
+        set_state @next_state
       end
     end
+  end
+  
+  def on_set options
+    @next_state = options['next_state'] || "IdleRight"
   end
 end

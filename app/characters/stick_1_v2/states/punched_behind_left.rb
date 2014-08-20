@@ -3,43 +3,32 @@ class Characters::Stick1V2::States::PunchedBehindLeft < Character::State
   
   def initialize character
     @character = character
-    @sprite = Components::Sprite.new(@character.class.image_resource['punched_behind'].merge 'factor_x' => 1, 'fps' => 33, 'mode' => "forward")
-    @components = [
-      @sprite
-    ]
-    @duration = @sprite.images.length / @sprite.fps.to_f
-    
-    @punch_trigger = {
-      'left' => "FallToStomachLeft",
-      'right' => "PunchedFrontLeft"
-    }
+    @duration = 0.4
+    @sprite_sheet_id = 'punched_behind'
+    @sprite_options = {'factor_x' => 1, 'duration' => @duration, 'mode' => "forward"}
+    @movement_options = {'on_surface' => true}
   end
   
   def update_game_logic time
-    @character.x -= 0.25
-    if Time.now.to_f - @time_set > @duration
+    return set_state "InAirLeft" unless @character.hit_level_down
+    
+    local_time = time - @state_set_time
+    
+    if local_time > @duration
+      set_state "IdleLeft"
+    end
+  end
+  
+  def on_hit options
+    case options['punch_direction']
+    when 'left'
       if controls.control_down? 'move left'
-        set_state "RunLeft"
-      elsif controls.control_down? 'move right'
-        set_state "RunRight"
-      elsif controls.control_down? 'block'
-        set_state "PreBlockLeft"
+        set_state "StaggerForwardLeft"
       else
-        set_state @next_state
+        set_state "FallToStomachLeft"
       end
+    when 'right'
+      set_state "PunchedFrontLeft"
     end
-  end
-  
-  def control_down control
-    case control
-    when 'attack punch'; @next_state = "PunchLeft"
-    when 'attack jab';   @next_state = "JabLeft"
-    end
-  end
-  
-  def on_set options
-    @next_state = "IdleLeft"
-    @time_set = Time.now.to_f
-    @sprite.index = 0
   end
 end
