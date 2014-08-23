@@ -26,6 +26,7 @@ class Characters::Stick1V2::States::StandUpFromBackLeft < Character::State
   end
   
   def on_set options
+    ease_position 'distance' => -50, 'transition_time' => @duration, 'start_time' => @character.time
     @has_hit_box = false
   end
   

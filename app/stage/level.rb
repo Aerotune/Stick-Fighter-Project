@@ -12,7 +12,7 @@ class Stage::Level
       meta_data = JSON.parse_file level_asset_file
         
       @level_assets[meta_data['id']] = {
-        'image' => Gosu::Image.new($window, File.join(resource_path, meta_data['image'])),
+        'image' => Gosu::Image.new($window, File.join(resource_path, meta_data['image']), true),
         'bounding_box' => meta_data['bounding_box']
       }
     end
@@ -40,7 +40,9 @@ class Stage::Level
     @objects.each &:update
   end
   
-  def draw
-    @objects.each &:draw
+  def draw camera
+    @objects.each do |object|
+      object.draw camera
+    end
   end
 end

@@ -1,6 +1,6 @@
 module Shaders
   class << self
-    attr_reader :tint, :blur_horizontal, :blur_vertical, :darken
+    attr_reader :tint, :blur_horizontal, :blur_vertical, :darken, :haze
   
     def load
       return if @loaded
@@ -8,6 +8,7 @@ module Shaders
       @tint = Ashton::Shader.new(fragment: 'shaders/tint.frag', uniforms: {color: [0,0,0]})
       @blur_horizontal = Ashton::Shader.new(fragment: 'shaders/blur_horizontal.frag', uniforms: {width: 1000})
       @blur_vertical   = Ashton::Shader.new(fragment: 'shaders/blur_vertical.frag', uniforms: {height: 600})
+      @haze            = Ashton::Shader.new(fragment: 'shaders/haze.frag', uniforms:{time: 0})
     end
     
     def set_blur strength

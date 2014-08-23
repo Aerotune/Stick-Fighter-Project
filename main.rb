@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'gosu'
 require 'ashton'
+
 require_relative 'shaders'
 require_relative 'settings'
 
@@ -28,11 +29,6 @@ class Window < Gosu::Window
   
   def button_down id
     @stage.button_down id
-    
-    case id
-    when Gosu::KbB
-      @blur_strength += 0.1
-    end
   end
   
   def button_up id 
@@ -41,25 +37,24 @@ class Window < Gosu::Window
   
   def update
     @stage.update
-    @blur_strength = mouse_y / height#(Math.sin(Time.now.to_f*0.5)+1)/2
   end
   
   def draw
     @stage.draw
-    
     #blur
+    #haze
     
-    @font.draw "fps: #{Gosu.fps}", $window.width - 60, 10, 0
+    #@font.draw "fps: #{Gosu.fps}", $window.width - 60, 10, 0
   end
   
-  def blur
-    @buffer.capture
-    
-    Shaders.set_blur @blur_strength
-    post_process Shaders.blur_horizontal, Shaders.blur_vertical do
-      @buffer.draw 0,0,0
-    end
-  end
+  #def blur
+  #  @buffer.capture
+  #
+  #  Shaders.set_blur 1.0
+  #  post_process shaders: [Shaders.blur_horizontal, Shaders.blur_vertical] do
+  #    @buffer.draw 0,0,0
+  #  end
+  #end
   
   def fill c1, c2=c1, c3=c2, c4=c3
     x1 = 0

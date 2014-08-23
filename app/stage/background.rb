@@ -1,98 +1,94 @@
 class Stage::Background
+  Dir[File.join(File.dirname(__FILE__), *%w[background *.rb])].each { |file| require file }
+  
   def initialize
-    @sun = Gosu::Image.new($window, 'resources/graphics/map_art/sun.png')
-    @dust = Gosu::Image.new($window, 'resources/graphics/map_art/dust.png')
-    @dust_x_1 = -@dust.width
-    @dust_x_2 = 0
-    @cloud = Gosu::Image.new($window, 'resources/graphics/map_art/cloud_1.png')
-    @cloud_x = -@cloud.width/2
+    @sky_color = Gosu::Image.new($window, 'resources/graphics/map_art/background/processed/sky_color.png')
+    #@sun = Gosu::Image.new($window, 'resources/graphics/map_art/background/processed/sun.png')
+    @ground_color = Gosu::Image.new($window, 'resources/graphics/map_art/background/processed/ground_color.png')
+    LenseFlare.load_images $window, 'resources/graphics/lense_flare/'
+    @pyramide_image_1 = Gosu::Image.new($window, 'resources/graphics/map_art/background/processed/pyramide_1.png')
+    @pyramide_image_2 = Gosu::Image.new($window, 'resources/graphics/map_art/background/processed/pyramide_2.png')
+    @pyramide_image_3 = Gosu::Image.new($window, 'resources/graphics/map_art/background/processed/pyramide_3.png')
+    @oasis_image      = Gosu::Image.new($window, 'resources/graphics/map_art/background/processed/oasis.png')
+    @dust_image       = Gosu::Image.new($window, 'resources/graphics/map_art/background/raw/dust.png')
+    #@dust = Gosu::Image.new($window, 'resources/graphics/map_art/background/raw/dust.png')
+    #@cloud = Gosu::Image.new($window, 'resources/graphics/map_art/raw/cloud_1.png')
+    #@cloud_x = -@cloud.width/2
+    
+    #@ground = Stage::Background::Ground.new(0, 0, 0, $window.height - 340, 0.01)
+    
+    @parallax_images = []
+    
+    @vanishing_point_x = $window.width.to_f  * 0.5
+    @vanishing_point_y = $window.height.to_f * 0.6
+    z = ZOrder::BACKGROUND_ELEMENT
+    @sun = Stage::Background::Sun.new(0, 0, 820, 165, 0.002)
+    @parallax_images << @sun
+    @parallax_images << Stage::Background::Ground.new(0, 0, 0, $window.height - 340, 0.01)
+    
+    
+    @parallax_images << Stage::Background::ParallaxImage.new(@pyramide_image_3, 0, $window.height*2,       z, @vanishing_point_x, @vanishing_point_y, 0.0125, 'haze' => 0.75)
+    @parallax_images << Stage::Background::ParallaxImage.new(@pyramide_image_2, 8000, $window.height*3,    z, @vanishing_point_x, @vanishing_point_y, 0.03, 'haze' => 0.5)
+    @parallax_images << Stage::Background::ParallaxImage.new(@oasis_image,      1000, $window.height*3.5,    z, @vanishing_point_x, @vanishing_point_y, 0.05, 'haze' => 0.2)
+    @parallax_images << Stage::Background::ParallaxImage.new(@pyramide_image_1, -4000, $window.height*4.5,   z, @vanishing_point_x, @vanishing_point_y, 0.1)
+    @parallax_images << Stage::Background::ParallaxImage.new(@dust_image,        3000, $window.height*5.6, z, @vanishing_point_x, @vanishing_point_y, 0.14, 'velocity_x' => -10)
+    @parallax_images.sort! { |a,b| a.z <=> b.z }
   end
   
-  def update
-    @cloud_x += 0.5
-    @dust_x_1 += 3
-    @dust_x_2 += 3
-    @dust_x_1 = 0 if @dust_x_1 > $window.width
-    @dust_x_2 = 0 if @dust_x_1 > $window.width
+  def update camera
+    @parallax_images.each do |parallax_image|
+      parallax_image.update camera
+    end
   end
   
   def draw
-    draw_background 400, 0
-    @cloud.draw @cloud_x, 0, 0
-    @dust.draw @dust_x_1, 160, 0
-    @dust.draw @dust_x_2, 160, 0
+    @sky_color.draw 0, -70, 0
+    
+    @parallax_images.each do |parallax_image|
+      if parallax_image.respond_to?(:haze) && parallax_image.haze > 0.0
+        Shaders.haze[:strength] = parallax_image.haze
+        $window.post_process shaders: Shaders.haze, z: parallax_image.z do
+          parallax_image.draw
+        end
+      else
+        parallax_image.draw
+      end
+      
+      if parallax_image.class == Stage::Background::Sun
+        draw_sun_center_flare @sun.screen_x, @sun.screen_y
+      end
+    end    
+    
+    draw_sun_outer_flare @sun.screen_x, @sun.screen_y
+    #@sun.draw
+    #@ground.draw
+    #sun_x = 720 - camera.x#$window.mouse_x#
+    #sun_y = 245 - camera.y#$window.mouse_y#
+    #@sun.draw_rot sun_x, sun_y, ZOrder::SUN, 0, 0.5, 0.5#, 1, 1, 0xFFFFFFFF, :additive    
+    #@ground_color .draw 0, $window.height - 346, ZOrder::BACKGROUND_GROUND
+    #draw_flare    sun_x, sun_y
+    
   end
   
-  
-  private
-  
-  
-  def draw_background horizon_line, sun_y
-    draw_sky $window.height - sun_y
-    draw_sun 300
-    draw_ground -horizon_line
+  def draw_sun_outer_flare x, y
+    z = ZOrder::SUNFLARE_OUTER
+    center_x = $window.width/2.0
+    center_y = $window.height/2.0
+    strength = 0.35 + Math.sin(Time.now.to_f*1.6)*0.05 - rand*0.1
+    color = Gosu::Color.rgb(255,230,190)
+    scale = 1.45
+    angle = 0.0
+    LenseFlare.draw_outer_flare x, y, z, center_x, center_y, strength, color, scale, angle
   end
   
-  def draw_sun sun_y
-    x = 300
-    y = sun_y
-    z = 0
-    
-    @sun.draw_rot x, y, z, 0, 0.5, 0.5, 0.5, 0.5
-  end
-  
-  def draw_sky offset_y
-    draw_horizontal_gradient 0, $window.width, -200, $window.height-offset_y, 0xFFFFFFFF, 0xFFCCFFFF
-    draw_horizontal_gradient 0, $window.width, $window.height-offset_y, $window.height+200, 0xFFCCFFFF, 0xFFFFFFCC
-  end
-  
-  def draw_ground offset_y
-    ground_horizon_fade_size = 200
-    draw_horizontal_gradient 0, $window.width, -offset_y, ground_horizon_fade_size-offset_y, 0x00DDDDB1, 0xFFE0DFC0
-    fill                     0, $window.width, ground_horizon_fade_size-offset_y, $window.height+100, 0xFFE0DFC0
-  end
-  
-  def fill left, right, top, bottom, color
-    x1 = left
-    y1 = top
-    c1 = color
-    
-    x2 = right
-    y2 = top
-    c2 = color
-    
-    x3 = right
-    y3 = bottom
-    c3 = color
-    
-    x4 = left
-    y4 = bottom
-    c4 = color
-    
-    z  = 0
-    
-    $window.draw_quad x1, y1, c1, x2, y2, c2, x3, y3, c3, x4, y4, c4, z
-  end
-  
-  def draw_horizontal_gradient left, right, top, bottom, top_color, bottom_color
-    x1 = left
-    y1 = top
-    c1 = top_color
-    
-    x2 = right
-    y2 = top
-    c2 = top_color
-    
-    x3 = right
-    y3 = bottom
-    c3 = bottom_color
-    
-    x4 = left
-    y4 = bottom
-    c4 = bottom_color
-    
-    z  = 0
-    
-    $window.draw_quad x1, y1, c1, x2, y2, c2, x3, y3, c3, x4, y4, c4, z
+  def draw_sun_center_flare x, y
+    z = ZOrder::SUN
+    center_x = $window.width/2.0
+    center_y = $window.height/2.0
+    strength = 0.4 + Math.sin(Time.now.to_f*1.6)*0.05 - rand*0.11
+    color = Gosu::Color.rgb(255,230,190)
+    scale = 1.45
+    angle = 0.0
+    LenseFlare.draw_center_flare x, y, z, center_x, center_y, strength, color, scale, angle
   end
 end

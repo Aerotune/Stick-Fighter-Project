@@ -1,7 +1,7 @@
 #version 110
 // http://www.gamerendering.com/2008/10/11/gaussian-blur-filter-shader/
-uniform sampler2D in_Texture; // Original in_Texture.
-varying vec2 var_TexCoord; // Pixel to process on this pass
+uniform sampler2D in_Texture;
+varying vec2 var_TexCoord;
 uniform float in_Width;
 float blurSize = 1.0/in_Width;
 

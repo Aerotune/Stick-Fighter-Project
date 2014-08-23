@@ -1,5 +1,9 @@
 module Systems::Sprite
-  class << self
+  @vanishing_point_x = 500
+  @vanishing_point_y = 300
+  @parallax_factor = 1.0
+  
+  class << self    
     
     def update entity_manager, time
       entity_manager.each_entity_with_components Components::Sprite do |entity, sprites|
@@ -27,7 +31,7 @@ module Systems::Sprite
       end
     end
     
-    def draw entity_manager
+    def draw entity_manager, camera
       entity_manager.each_entity_with_components Components::Image do |entity, image_components|
         position = entity_manager.get_component entity, Components::Position
         tint = entity_manager.get_component entity, Components::Tint
@@ -35,18 +39,21 @@ module Systems::Sprite
           image_components.each do |image_component|
             x = position.x
             y = position.y
-            z = 0
+            screen_x = @vanishing_point_x + (x - camera.x) * @parallax_factor * camera.zoom
+            screen_y = @vanishing_point_y + (y - camera.y) * @parallax_factor * camera.zoom
+            z = ZOrder::CHARACTER
             angle = 0
             center_x = image_component.center_x.to_f / image_component.image.width
             center_y = image_component.center_y.to_f / image_component.image.height
-            factor_x = image_component.factor_x
+            factor_x = image_component.factor_x * camera.zoom
+            factor_y = 1.0                      * camera.zoom
             if tint
               Shaders.tint[:color] = tint.color
-              #$window.post_process Shaders.tint do
-                image_component.image.draw_rot x, y, z, angle, center_x, center_y, factor_x
-                #end
+              $window.post_process shaders: Shaders.tint, z: z do
+                image_component.image.draw_rot screen_x, screen_y, z, angle, center_x, center_y, factor_x, factor_y
+              end
             else
-              image_component.image.draw_rot x, y, z, angle, center_x, center_y, factor_x
+              image_component.image.draw_rot screen_x, screen_y, z, angle, center_x, center_y, factor_x, factor_y
             end
           end
         end
@@ -59,19 +66,22 @@ module Systems::Sprite
           sprites.each do |sprite|
             x = position.x
             y = position.y
-            z = 0
+            screen_x = @vanishing_point_x + (x - camera.x) * @parallax_factor * camera.zoom
+            screen_y = @vanishing_point_y + (y - camera.y) * @parallax_factor * camera.zoom
+            z = ZOrder::CHARACTER
             angle = 0
             center_x = sprite.center_x.to_f / sprite.images.first.width
             center_y = sprite.center_y.to_f / sprite.images.first.height
-            factor_x = sprite.factor_x
+            factor_x = sprite.factor_x  * camera.zoom
+            factor_y = 1.0              * camera.zoom
             
             if tint
               Shaders.tint[:color] = tint.color
-              $window.post_process Shaders.tint do
-                sprite.image.draw_rot x, y, z, angle, center_x, center_y, factor_x
+              $window.post_process shaders: Shaders.tint, z: z do
+                sprite.image.draw_rot screen_x, screen_y, z, angle, center_x, center_y, factor_x, factor_y
               end
             else
-              sprite.image.draw_rot x, y, z, angle, center_x, center_y, factor_x
+              sprite.image.draw_rot screen_x, screen_y, z, angle, center_x, center_y, factor_x, factor_y
             end
             
           end

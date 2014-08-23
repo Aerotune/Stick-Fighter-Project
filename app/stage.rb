@@ -17,6 +17,11 @@ class Stage
   
   def initialize
     @characters = {}
+    @camera = Camera.new 1350, 900, 0.8
+    @background_camera = Camera.new 1350, 900, 0.8
+    @background = Stage::Background.new
+    @camera_filtering = 0.01
+    @background.update @camera
     @level = Stage::Level.new self
     @start_time = nil
     @time = 0
@@ -30,7 +35,7 @@ class Stage
     @players = {}
     @level_objects = []
     
-    add_player 'player2', 1500, 1600, "IdleRight", [0.2, 0.0, 0.4]
+    add_player 'player2', 200, 200, "IdleRight", [0.2, 0.0, 0.4]
     add_player 'player1', 2500, 1600, "IdleLeft", [0.4, 0.05, 0.0]
   end
   
@@ -62,34 +67,89 @@ class Stage
     end
   end
   
-  def update
+  def update    
     if $window.button_down? Gosu::KbSpace
       @start_time += 2/60.0
     end
     current_time  = Time.now.to_f
     @start_time ||= current_time
     @time         = current_time - @start_time
-    
-    
-    @level.update
-    #@time_queue.set_time! @time
-    
-    Systems::Movement.update @entity_manager, @time
-    
+        
     if @time > @live_time
       @live_time = @time 
       update_game_logic  @time
-      #Systems::HitTest.update @entity_manager
     else
-      @players.each do |player_control_id, player|
-        player.update @time
-      end
+      update_replay @time
     end
     Systems::Sprite.update @entity_manager, @time
-    #@level.update
+  end
+  
+  def shared_update time
+    #if $window.button_down?(Gosu::Kb0)
+    #  @camera.zoom += 0.01
+    #elsif $window.button_down?(Gosu::Kb9)
+    #  @camera.zoom -= 0.01
+    #end
+    
+    camera_x, camera_y = 0.0, 0.0
+    player_min_x, player_min_y = nil, nil
+    player_max_x, player_max_y = nil, nil
+    @players.each do |player_control_id, player|
+      position = player.get_component(Components::Position)
+      camera_x += position.x
+      camera_y += position.y 
+      
+      player_min_x ||= position.next_x
+      player_min_x = position.next_x if position.next_x < player_min_x
+      
+      player_min_y ||= position.next_y
+      player_min_y = position.next_y if position.next_y < player_min_y
+      
+      player_max_x ||= position.next_x
+      player_max_x = position.next_x if position.next_x > player_max_x
+      
+      player_max_y ||= position.next_y
+      player_max_y = position.next_y if position.next_y > player_max_y
+    end
+    
+    distance = Gosu.distance player_min_x, player_min_y - $window.height/3.0, player_max_x, player_max_y + $window.height/4.0
+    distance = distance - 500.0
+    distance = 0.0 if distance < 0.0
+    zoom =  0.55 - ((distance)/2000.0)**0.3*0.28
+    zoom = 0.27 if zoom < 0.27
+    zoom = 1.0 if zoom > 1.0
+    
+    @camera_filtering += 0.0005
+    @camera_filtering = 0.15 if @camera_filtering > 0.15
+    @camera.zoom += (zoom-@camera.zoom)*@camera_filtering
+    camera_x /= @players.size
+    camera_y /= @players.size
+    
+    @camera.x += (camera_x-@camera.x)*@camera_filtering
+    @camera.y += (camera_y-@camera.y)*@camera_filtering 
+    
+    
+    @background_camera.x = @camera.x
+    @background_camera.y = @camera.y
+    @background_camera.zoom = @camera.zoom + 0.9
+    @background.update @background_camera
+    
+    
+    
+    Shaders.haze[:time] = @time
+    Systems::Movement.update @entity_manager, @time
+    @level.update
+  end
+  
+  def update_replay time
+    shared_update time
+    @players.each do |player_control_id, player|
+      player.update @time
+    end
   end
   
   def update_game_logic time
+    shared_update time
     Systems::HitTest.update @entity_manager, @characters
     
     @characters.values.each do |character|
@@ -132,15 +192,16 @@ class Stage
   end
   
   def draw
-    $window.fill 0xFF557BC6, 0xFF4F91ED
-    $window.scale 0.32, 0.32, -100, -50 do
+    #$window.fill 0xFF557BC6, 0xFF4F91ED
+    @background.draw
+    #$window.scale 0.32, 0.32, -100, -50 do
     #$window.scale 0.45, 0.45, $window.width/2, $window.height/2 do
       #$window.translate -position.x+$window.width/2, -position.y+$window.height/3*2 do          
-        @level.draw
-        Systems::Sprite.draw @entity_manager
+        @level.draw @camera
+        Systems::Sprite.draw @entity_manager, @camera
         #Systems::HitTest.draw @entity_manager # for some reason this stops $window.blur from working
-      #end
-    end
+        #end
+    #end
     
     unless live?
       if $window.button_down? Gosu::KbSpace
