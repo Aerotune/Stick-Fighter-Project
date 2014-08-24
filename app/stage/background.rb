@@ -13,8 +13,8 @@ class Stage::Background
     @@dust_image       = Gosu::Image.new($window, 'resources/graphics/map_art/background/processed/dust.png')
     
     @@music = [
-      Gosu::Song.new($window, 'resources/sound/music/Epic_Soul_Factory_-_Arab_Trade.mp3'),
-      Gosu::Song.new($window, 'resources/sound/music/Epic_Soul_Factory_-_The_Gift_of_the_Gods.mp3')
+      Gosu::Song.new($window, 'resources/sound/music/Epic_Soul_Factory_-_Arab_Trade.ogg'),
+      Gosu::Song.new($window, 'resources/sound/music/Epic_Soul_Factory_-_The_Gift_of_the_Gods.ogg')
     ]
     @@music_index = rand(@@music.length)
   end
