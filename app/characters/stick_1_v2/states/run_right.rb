@@ -6,6 +6,15 @@ class Characters::Stick1V2::States::RunRight < Character::State
     @movement_options = {'on_surface' => true, 'velocity' => 720}
   end
   
+  def on_set options
+    @run_loop_instance ||= SoundResource.play "run_loop"
+  end
+  
+  def on_unset
+    @run_loop_instance.stop if @run_loop_instance
+    @run_loop_instance = nil
+  end
+  
   def on_hit options
     case options['punch_direction']
     when 'right'; set_state "PunchedBehindRight"
@@ -28,11 +37,15 @@ class Characters::Stick1V2::States::RunRight < Character::State
   
   def update_game_logic time 
     return set_state "InAirRight" unless @character.hit_level_down
+    
+    
     if controls.control_down?('move right')
       set_velocity time, 720
     else
       set_velocity time, 0
       set_state "IdleRight" if velocity_x(time) < 50
     end
+    
+    set_state "PreBlockRight" if controls.control_down? 'block'
   end
 end

@@ -6,7 +6,7 @@ class Characters::Stick1V2::States::PreBlockLeft < Character::State
     @duration = 0.2
     @sprite_sheet_id = 'pre_block'
     @sprite_options = {'factor_x' => 1, 'duration' => @duration, 'mode' => "forward"}
-    @movement_options = {'on_surface' => true}
+    @movement_options = {'on_surface' => true, 'velocity' => 0}
   end
   
   def update_game_logic time
@@ -14,10 +14,27 @@ class Characters::Stick1V2::States::PreBlockLeft < Character::State
     local_time = time - @state_set_time
   end
   
+  def control_down control
+    case control
+    when 'move left'
+      set_state "DashForwardLeft"
+    when 'move right'
+      set_state "DashBackwardLeft"
+    end
+  end
+  
   def control_up control
     case control
     when 'block'
-      set_state "IdleLeft"
+      case controls.latest_horizontal_move
+      when 'move right'
+        set_state "RunRight"
+      when 'move left'
+        set_state "RunLeft"
+      else
+        set_state "IdleLeft"
+      end
+      
     end
   end
   
@@ -28,7 +45,7 @@ class Characters::Stick1V2::States::PreBlockLeft < Character::State
       if local_time < @duration * 0.7
         set_state "PunchedFrontLeft"
       else
-        set_state "BlockLeft"
+        set_state "BlockLeft", 'punched' => true
       end
     when 'left'
       set_state "PunchedBehindLeft"

@@ -60,6 +60,7 @@ class Characters::Stick1V2::States::JabRight < Character::State
   end
   
   def on_set options
+    SoundResource.play 'punch' unless options['squelch']
     @next_state = ["IdleRight"]
     @has_moved = false
     @has_punched = false

@@ -7,6 +7,10 @@ class Characters::Stick1V2::States::LandRight < Character::State
     @movement_options = {'on_surface' => true, 'velocity' => 0}
   end
   
+  def on_set options
+    SoundResource.play 'land'
+  end
+  
   def on_hit options
     case options['punch_direction']
     when 'right'; set_state "PunchedBehindRight"

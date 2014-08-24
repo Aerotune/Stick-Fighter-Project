@@ -26,13 +26,13 @@ class MovementEasePosition
   end
   
   def velocity time
-    0
+    @easer.derivative(time - @start_time)
   end
   
   alias :velocity_x :velocity
   
   def velocity_y time
-    0
+    @easer.derivative(time - start_time) * @factor_y
   end
   
   def start_velocity

@@ -25,7 +25,7 @@ class Stage
     @level = Stage::Level.new self
     @start_time = nil
     @time = 0
-    @live_time = 0
+    @live_time = -1 # I kinda need this so I don't get any input before the characters are properly spawned
     
     @font = Gosu::Font.new($window, 'Arial', 16)
     
@@ -121,12 +121,21 @@ class Stage
     
     @camera_filtering += 0.0005
     @camera_filtering = 0.15 if @camera_filtering > 0.15
-    @camera.zoom += (zoom-@camera.zoom)*@camera_filtering
+    camera_delta_zoom = zoom - @camera.zoom
+    @camera.zoom += camera_delta_zoom*@camera_filtering
     camera_x /= @players.size
     camera_y /= @players.size
     
-    @camera.x += (camera_x-@camera.x)*@camera_filtering
-    @camera.y += (camera_y-@camera.y)*@camera_filtering 
+    prev_camera_x = @camera.x
+    prev_camera_y = @camera.y
+    camera_dx = (camera_x-prev_camera_x)
+    camera_dy = (camera_y-prev_camera_y)
+    camera_speed = Gosu.distance(0,0,camera_dx, camera_dy)
+    wind_strength = 0.3+Math.tanh(camera_speed/40.0+camera_delta_zoom)*0.2
+    @camera.x += camera_dx*@camera_filtering
+    @camera.y += camera_dy*@camera_filtering 
+        
+    SoundResource.play('wind' ,wind_strength, 1.0+wind_strength)
     
     
     @background_camera.x = @camera.x
@@ -154,7 +163,7 @@ class Stage
     
     @characters.values.each do |character|
       position = character.get_component(Components::Position)
-      if position.y > 4000
+      if position.y > 3000
         $window.reset_stage
       end
     end

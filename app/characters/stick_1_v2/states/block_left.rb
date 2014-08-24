@@ -10,18 +10,44 @@ class Characters::Stick1V2::States::BlockLeft < Character::State
   
   def update_game_logic time
     return set_state "InAirLeft" unless @character.hit_level_down
-    set_state "IdleLeft" unless controls.control_down? 'block'
+    #set_state "IdleLeft" unless controls.control_down? 'block'
   end
+  
+  def control_down control
+    case control
+    when 'move left'
+      set_state "DashForwardLeft"
+    when 'move right'
+      set_state "DashBackwardLeft"
+    end
+  end
+  
+  def control_up control
+    case control
+    when 'block'
+      case controls.latest_horizontal_move
+      when 'move right'
+        set_state "RunRight"
+      when 'move left'
+        set_state "RunLeft"
+      else
+        set_state "IdleLeft"
+      end
+    end
+  end
+  
   def on_hit options
     case options['punch_direction']
     when 'right'
-      set_state 'BlockLeft'
+      set_state 'BlockLeft', 'punched' => true
     when 'left'
       set_state 'PunchedBehindLeft'
     end
   end
   
   def on_set options
-    ease_position 'distance' => 45, 'transition_time' => 0.2, 'start_time' => @character.time
+    if options['punched']
+      ease_position 'distance' => 45, 'transition_time' => 0.2, 'start_time' => @character.time      
+    end
   end
 end

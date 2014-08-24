@@ -9,6 +9,10 @@ class Characters::Stick1V2::States::JumpRight < Character::State
     @movement_options = {'on_surface' => false, 'start_velocity_y' => -1600}
   end
   
+  def on_set options
+    SoundResource.play 'jump'
+  end
+  
   def control_up control
     case control
     when 'move up'

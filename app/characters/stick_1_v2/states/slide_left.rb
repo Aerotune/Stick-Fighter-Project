@@ -23,7 +23,12 @@ class Characters::Stick1V2::States::SlideLeft < Character::State
     when 'move up'
       set_state "JumpLeft"
     when 'attack punch'
-      set_state "PunchLeft"
+      if @next_state.include? "Right"
+        set_state "PunchRight"
+      else
+        set_state "PunchLeft"
+      end
+      
     end
   end
   
@@ -50,6 +55,7 @@ class Characters::Stick1V2::States::SlideLeft < Character::State
   end
   
   def on_set options
+    SoundResource.play "slide"
     @next_state = options['next_state'] || "IdleLeft"
   end
 end

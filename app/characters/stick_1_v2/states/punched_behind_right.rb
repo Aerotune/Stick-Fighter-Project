@@ -9,6 +9,10 @@ class Characters::Stick1V2::States::PunchedBehindRight < Character::State
     @movement_options = {'on_surface' => true}
   end
   
+  def on_set options
+    SoundResource.play 'punched'
+  end
+  
   def update_game_logic time
     return set_state "InAirRight" unless @character.hit_level_down
     

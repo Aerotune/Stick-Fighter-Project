@@ -24,6 +24,7 @@ class Characters::Stick1V2::States::RunningAttackRight < Character::State
   end
   
   def on_set options
+    SoundResource.play 'punch' unless options['squelch']
     @attack_after = false
     @has_hit_box  = false
     ease_position 'distance' => 200, 'transition_time' => 0.4, 'start_time' => @character.time

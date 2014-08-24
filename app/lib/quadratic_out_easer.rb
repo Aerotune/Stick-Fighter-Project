@@ -12,6 +12,12 @@ class QuadraticOutEaser
     @integral_of_duration = @change * (@duration - (@duration**3 / (3*@duration**2))) + @start_value * @duration
   end
   
+  def derivative time
+    return 0 if time <= 0
+    return 0 if time >= @duration
+    return (-2.0 * @change * (time / @duration - 1.0)) / @duration
+  end
+  
   def value time    
     return @start_value if time <= 0
     return @start_value + @change if time >= @duration

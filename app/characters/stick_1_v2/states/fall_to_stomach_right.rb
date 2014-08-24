@@ -21,6 +21,8 @@ class Characters::Stick1V2::States::FallToStomachRight < Character::State
   end
   
   def on_set options
+    SoundResource.play 'punched'
+    SoundResource.play 'fall'
     ease_position 'distance' => 100, 'transition_time' => @duration*0.5, 'start_time' => @character.time
   end
 end

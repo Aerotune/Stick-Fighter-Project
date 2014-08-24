@@ -26,6 +26,9 @@ class Commands::SetMovementInAir < Command
       when MovementInAir
         @start_velocity_x = prev_movement.velocity_x(@start_time)
         @terminal_velocity_x = @start_velocity_x
+      when MovementEasePosition
+        @start_velocity_x = prev_movement.velocity_x(@start_time)
+        @terminal_velocity_x = @start_velocity_x
       end
     else
       position = @entity_manager.get_component @entity, Components::Position

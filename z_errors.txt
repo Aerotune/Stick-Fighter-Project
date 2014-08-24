@@ -1,2 +1,0 @@
-NotImplementedError: method ‘call’ called on terminated object (0x007faf835c7a80 flags=0x0 klass=0x0)
-

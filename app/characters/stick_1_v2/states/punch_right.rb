@@ -29,7 +29,7 @@ class Characters::Stick1V2::States::PunchRight < Character::State
     local_time = time - @state_set_time
     
     if @can_jab && (local_time < 0.105) && !controls.control_down?('attack punch')
-      set_state "JabRight"
+      set_state "JabRight", 'squelch' => true
     end
     
     if @has_punched
@@ -70,6 +70,7 @@ class Characters::Stick1V2::States::PunchRight < Character::State
   end
   
   def on_set options
+    SoundResource.play 'punch' unless options['squelch']
     @can_jab = options.has_key?('can_jab') ? options['can_jab'] : true
     @next_state = "IdleRight"
     @has_moved = false
