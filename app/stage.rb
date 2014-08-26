@@ -213,7 +213,7 @@ class Stage
         #Systems::HitTest.draw @entity_manager # for some reason this stops $window.blur from working
         #end
     #end
-    $window.blur
+    #$window.blur
     unless live?
       if $window.button_down? Gosu::KbSpace
         @font.draw "REPLAY <<", 10, 10, 0
