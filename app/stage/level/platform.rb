@@ -3,10 +3,10 @@ class Stage::Level::Platform
     @meta_data = meta_data
     @x = x
     @y = y
+    @z = ZOrder::LEVEL
+    
     @vanishing_point_x = $window.width/2.0
     @vanishing_point_y = $window.height/2.0
-    @parallax_factor = 1.0
-    @z = ZOrder::LEVEL
     @parallax_factor = 1.0
   end
   
@@ -18,7 +18,7 @@ class Stage::Level::Platform
     screen_x = @vanishing_point_x + (@x - camera.x) * @parallax_factor * camera.zoom
     screen_y = @vanishing_point_y + (@y - camera.y) * @parallax_factor * camera.zoom
     factor = camera.zoom
-    @meta_data['image'].draw screen_x.to_i, screen_y.to_i, @z, factor, factor
+    @meta_data['image'].draw screen_x, screen_y, @z, factor, factor
   end
   
   def left

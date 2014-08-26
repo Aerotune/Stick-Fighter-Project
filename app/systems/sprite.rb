@@ -47,7 +47,7 @@ module Systems::Sprite
             center_y = image_component.center_y.to_f / image_component.image.height
             factor_x = image_component.factor_x * camera.zoom
             factor_y = 1.0                      * camera.zoom
-            if tint
+            if false#tint
               Shaders.tint[:color] = tint.color
               $window.post_process shaders: Shaders.tint, z: z do
                 image_component.image.draw_rot screen_x, screen_y, z, angle, center_x, center_y, factor_x, factor_y
@@ -75,7 +75,7 @@ module Systems::Sprite
             factor_x = sprite.factor_x  * camera.zoom
             factor_y = 1.0              * camera.zoom
             
-            if tint
+            if false#tint
               Shaders.tint[:color] = tint.color
               $window.post_process shaders: Shaders.tint, z: z do
                 sprite.image.draw_rot screen_x, screen_y, z, angle, center_x, center_y, factor_x, factor_y

@@ -91,13 +91,11 @@ class Stage
     #  @camera.zoom -= 0.01
     #end
     
-    camera_x, camera_y = 0.0, 0.0
     player_min_x, player_min_y = nil, nil
     player_max_x, player_max_y = nil, nil
+    
     @players.each do |player_control_id, player|
       position = player.get_component(Components::Position)
-      camera_x += position.x
-      camera_y += position.y 
       
       player_min_x ||= position.next_x
       player_min_x = position.next_x if position.next_x < player_min_x
@@ -112,19 +110,23 @@ class Stage
       player_max_y = position.next_y if position.next_y > player_max_y
     end
     
-    distance = Gosu.distance player_min_x, player_min_y - $window.height/3.0, player_max_x, player_max_y + $window.height/4.0
+    player_min_y -= $window.height*1.5
+    player_max_y += $window.height/1.5
+    
+    camera_x = (player_min_x + player_max_x) / 2.0
+    camera_y = (player_min_y + player_max_y) / 2.0
+    
+    distance = Gosu.distance player_min_x, player_min_y, player_max_x, player_max_y
     distance = distance - 500.0
     distance = 0.0 if distance < 0.0
-    zoom =  0.55 - ((distance)/2000.0)**0.3*0.28
-    zoom = 0.27 if zoom < 0.27
+    zoom =  0.55 - ((distance)/2800)**0.4*0.28
+    zoom = 0.18 if zoom < 0.18
     zoom = 1.0 if zoom > 1.0
     
     @camera_filtering += 0.0005
     @camera_filtering = 0.15 if @camera_filtering > 0.15
     camera_delta_zoom = zoom - @camera.zoom
     @camera.zoom += camera_delta_zoom*@camera_filtering
-    camera_x /= @players.size
-    camera_y /= @players.size
     
     prev_camera_x = @camera.x
     prev_camera_y = @camera.y
@@ -211,7 +213,7 @@ class Stage
         #Systems::HitTest.draw @entity_manager # for some reason this stops $window.blur from working
         #end
     #end
-    
+    $window.blur
     unless live?
       if $window.button_down? Gosu::KbSpace
         @font.draw "REPLAY <<", 10, 10, 0

@@ -18,22 +18,15 @@ class Stage::Level
     end
     
     @objects = []
-    @objects << Stage::Level::Platform.new(@level_assets['platform_1'], 100, 500)
-    @objects << Stage::Level::Platform.new(@level_assets['platform_1'], 350, 800)
-    @objects << Stage::Level::Platform.new(@level_assets['platform_1'], 1250, 400)
-    @objects << Stage::Level::Platform.new(@level_assets['platform_1'], 1000, 1200)
-    @objects << Stage::Level::Platform.new(@level_assets['platform_1'], 1500, 1200)
-    @objects << Stage::Level::Platform.new(@level_assets['platform_1'], 2750, 1200)
-    
-    @objects << Stage::Level::Platform.new(@level_assets['platform_1'], 50, 1800)
-    @objects << Stage::Level::Platform.new(@level_assets['platform_1'], 750, 1600)
-    @objects << Stage::Level::Platform.new(@level_assets['platform_1'], 1000, 1800)
-    @objects << Stage::Level::Platform.new(@level_assets['platform_1'], 1500, 1800)
-    @objects << Stage::Level::Platform.new(@level_assets['platform_1'], 2000, 1800)
-    @objects << Stage::Level::Platform.new(@level_assets['platform_1'], 2500, 1800)
-    @objects << Stage::Level::Platform.new(@level_assets['platform_1'], 3000, 1800)
-    
-    @objects << Stage::Level::Platform.new(@level_assets['platform_1'], 500, 1900)
+    @objects << Stage::Level::Box.new(100, 500)
+    @objects << Stage::Level::Box.new(350, 800)
+    @objects << Stage::Level::Box.new(1250, 400)
+    @objects << Stage::Level::Box.new(1000, 1200, 'width' => 1015)
+    @objects << Stage::Level::Box.new(2750, 1200)
+    @objects << Stage::Level::Box.new(50, 1800)
+    @objects << Stage::Level::Box.new(750, 1600)
+    @objects << Stage::Level::Box.new(1000, 1800, 'width' => 3000)
+    @objects << Stage::Level::Box.new(500, 1900)
   end
   
   def update
