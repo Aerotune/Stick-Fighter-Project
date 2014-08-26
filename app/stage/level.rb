@@ -23,10 +23,11 @@ class Stage::Level
     @objects << Stage::Level::Box.new(1250, 400)
     @objects << Stage::Level::Box.new(1000, 1200, 'width' => 1015)
     @objects << Stage::Level::Box.new(2750, 1200)
-    @objects << Stage::Level::Box.new(50, 1800)
-    @objects << Stage::Level::Box.new(750, 1600)
-    @objects << Stage::Level::Box.new(1000, 1800, 'width' => 3000)
-    @objects << Stage::Level::Box.new(500, 1900)
+    @objects << Stage::Level::Box.new(-350, 2200, 'width' => 700)
+    @objects << Stage::Level::Box.new(650, 1550, 'width' => 250)
+    @objects << Stage::Level::Box.new(1000, 1800, 'width' => 3000, 'height' => 1000)
+    @objects << Stage::Level::Box.new(500, 1900, 'width' => 500)
+    @objects << Stage::Level::Box.new(500, 2500, 'width' => 500)
   end
   
   def update

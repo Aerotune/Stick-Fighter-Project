@@ -57,6 +57,10 @@ class MovementInAir
     @easer_x.end_value
   end
   
+  def terminal_velocity_y
+    @easer_y.end_value
+  end
+  
   def velocity_x time
     @easer_x.value(time - @start_time_x)
   end

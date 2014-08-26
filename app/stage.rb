@@ -119,8 +119,8 @@ class Stage
     distance = Gosu.distance player_min_x, player_min_y, player_max_x, player_max_y
     distance = distance - 500.0
     distance = 0.0 if distance < 0.0
-    zoom =  0.55 - ((distance)/2800)**0.4*0.28
-    zoom = 0.18 if zoom < 0.18
+    zoom =  0.55 - ((distance)/2000)**0.4*0.28
+    zoom = 0.15 if zoom < 0.15
     zoom = 1.0 if zoom > 1.0
     
     @camera_filtering += 0.0005
@@ -176,24 +176,33 @@ class Stage
       
       player.hit_level_down = nil
       player.hit_level_up   = nil
+      player.hit_level_left = nil
+      player.hit_level_right = nil
       
       @level.objects.each do |object|
         left        = position.x      + hit_box.offset_x
         right       = left            + hit_box.width
         top         = position.y      + hit_box.offset_y
         bottom      = top             + hit_box.height
+        next_left   = position.next_x + hit_box.offset_x
+        next_right  = next_left       + hit_box.width
         next_top    = position.next_y + hit_box.offset_y
         next_bottom = next_top        + hit_box.height
+        height = hit_box.height - hit_box.width/2.0
         
+        hit_x = (object.left .. object.right) === position.x
+        hit_down = hit_x && (bottom <= object.top) && (next_bottom >= object.top)
+        hit_up   = hit_x && (top >= object.bottom) && (next_top <= object.bottom)
         
-        hit_down = (bottom <= object.top) && (next_bottom >= object.top) &&
-                   (object.left .. object.right) === position.x
+        hit_y = (top + hit_box.width/2.0 .. bottom - hit_box.width/2.0).overlaps?(object.top..object.bottom)
+        hit_left  = hit_y && (left >= object.right) && (next_left <= object.right)
+        hit_right = hit_y && (right <= object.left) && (next_right >= object.left)
         
-        hit_up   = (top >= object.bottom) && (next_top <= object.bottom) &&
-                   (object.left .. object.right) === position.x
         
         player.hit_level_down = object.top    if hit_down
         player.hit_level_up   = object.bottom if hit_up
+        player.hit_level_right = object.left - hit_box.width/2.0  if hit_right
+        player.hit_level_left = object.right + hit_box.width/2.0  if hit_left
       end
       
       

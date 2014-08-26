@@ -11,7 +11,7 @@ class Stage::Level::Box
     @parallax_back_factor  = 1.0 / (1.0+depth)
     
     @width = options['width'] || 515.0
-    @height = 50.0
+    @height = options['height'] || 50.0
   end
   
   def update

@@ -9,6 +9,16 @@ class Character::State
     @character.entity
   end
   
+  def update_collision_game_logic time
+    if @character.hit_level_right
+      @character.time_queue.add time, Commands::RemoveVelocity.new(entity_manager, entity, time, 'start_x' => @character.hit_level_right)
+    end
+    
+    if @character.hit_level_left
+      @character.time_queue.add time, Commands::RemoveVelocity.new(entity_manager, entity, time, 'start_x' => @character.hit_level_left)
+    end
+  end
+  
   #def state_trigger! control_triggers
   #  control_down_triggers = control_triggers['control_down']
   #  controls.moves.reverse_each do |move_control|
@@ -95,7 +105,9 @@ class Character::State
   def set_in_air_velocity_x time, terminal_velocity_x
     movement = @character.get_component(Components::Movement).movement
     unless movement.terminal_velocity_x == terminal_velocity_x
-      @character.time_queue.add time, Commands::UpdateMovementInAir.new(entity_manager, entity, time, 'terminal_velocity_x' => terminal_velocity_x)
+      unless (terminal_velocity_x > 0.0 && @character.hit_level_right) || (terminal_velocity_x < 0.0 && @character.hit_level_left)
+        @character.time_queue.add time, Commands::UpdateMovementInAir.new(entity_manager, entity, time, 'terminal_velocity_x' => terminal_velocity_x)
+      end
     end
   end
   
