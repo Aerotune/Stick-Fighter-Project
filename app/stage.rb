@@ -119,7 +119,7 @@ class Stage
     distance = Gosu.distance player_min_x, player_min_y, player_max_x, player_max_y
     distance = distance - 500.0
     distance = 0.0 if distance < 0.0
-    zoom =  0.55 - ((distance)/2000)**0.4*0.28
+    zoom =  0.55 - ((distance)/1500)**0.4*0.28
     zoom = 0.15 if zoom < 0.15
     zoom = 1.0 if zoom > 1.0
     
@@ -194,9 +194,15 @@ class Stage
         hit_down = hit_x && (bottom <= object.top) && (next_bottom >= object.top)
         hit_up   = hit_x && (top >= object.bottom) && (next_top <= object.bottom)
         
-        hit_y = (top + hit_box.width/2.0 .. bottom - hit_box.width/2.0).overlaps?(object.top..object.bottom)
-        hit_left  = hit_y && (left >= object.right) && (next_left <= object.right)
-        hit_right = hit_y && (right <= object.left) && (next_right >= object.left)
+        #hit_y = (top + hit_box.width/2.0 .. bottom - hit_box.width/2.0).overlaps?(object.top..object.bottom)
+        #hit_left  = hit_y && (left >= object.right) && (next_left <= object.right)
+        #hit_right = hit_y && (right <= object.left) && (next_right >= object.left)
+        if object.solid
+          object_middle = object.left + object.width/2.0
+          hit_y = (top + hit_box.width/2.0 .. bottom - hit_box.width/2.0).overlaps?(object.top..object.bottom)
+          hit_left  = hit_y && (object_middle..object.right) === next_left
+          hit_right = hit_y && (object.left..object_middle) === next_right
+        end
         
         
         player.hit_level_down = object.top    if hit_down

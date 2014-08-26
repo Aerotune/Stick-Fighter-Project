@@ -1,4 +1,5 @@
 class Stage::Level::Box
+  attr_reader :width, :height, :solid
   def initialize x, y, options={}
     @x = x
     @y = y
@@ -12,6 +13,7 @@ class Stage::Level::Box
     
     @width = options['width'] || 515.0
     @height = options['height'] || 50.0
+    @solid = options['solid']
   end
   
   def update
