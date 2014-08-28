@@ -8,17 +8,26 @@ class Characters::Stick1V2::States::InAirLeft < Character::State
     @movement_options = {'on_surface' => false}
   end
   
-  def control_up control
-    case control
-    when 'move up'
-      set_in_air_transition_time_y @character.time, 1.115
-    end
+  def on_set options
+    @fast_fall = false
   end
   
   def control_down control
     case control
     when 'move down'
-      set_in_air_transition_time_y @character.time, 0.547
+      set_in_air_transition_time_y @character.time, 0.86701
+      @fast_fall = true
+    when 'attack punch'
+      case controls.latest_move
+      when "move up"
+        set_state "InAirKickUpLeft"
+      when "move left"
+        set_state "InAirKickLeft"
+      when "move down"
+        set_state "InAirAttackDownLeft"
+      else
+        set_state "InAirPunchLeft"
+      end
     end
   end
   
@@ -26,6 +35,7 @@ class Characters::Stick1V2::States::InAirLeft < Character::State
     if @character.hit_level_down
       set_state "LandLeft", 'start_y' => @character.hit_level_down
     else
+      set_in_air_transition_time_y @character.time, 1.945625 if !@fast_fall && !controls.control_down?('move up')
       case controls.latest_horizontal_move
       when 'move right'
         set_in_air_velocity_x time, 720

@@ -3,7 +3,7 @@ class Characters::Stick1V2::States::RunningAttackRight < Character::State
   
   def initialize character
     @character = character
-    @duration = 0.45
+    @duration = 0.6
     @sprite_sheet_id = 'dash_kick'
     @sprite_options = {'factor_x' => -1, 'duration' => @duration, 'mode' => "forward"}
     @movement_options = {'on_surface' => true}
@@ -27,7 +27,7 @@ class Characters::Stick1V2::States::RunningAttackRight < Character::State
     SoundResource.play 'punch' unless options['squelch']
     @attack_after = false
     @has_hit_box  = false
-    ease_position 'distance' => 200, 'transition_time' => 0.4, 'start_time' => @character.time
+    ease_position 'distance' => 220, 'transition_time' => 0.4, 'start_time' => @character.time
   end
   
   def update_game_logic time
@@ -36,13 +36,13 @@ class Characters::Stick1V2::States::RunningAttackRight < Character::State
     local_time = time - @state_set_time
     
     if @has_hit_box
-      if local_time > @duration * 0.55
+      if local_time > @duration * 0.4
         remove_punch_hit_box
       end
     else
-      if local_time > @duration * 0.4
+      if local_time > @duration * 0.3
         @has_hit_box = true
-        create_punch_hit_box 'right', 'offset_x' => 10, 'width' => 100
+        create_punch_hit_box 'right', 'offset_x' => 0, 'width' => 80
       end
     end
     
@@ -60,8 +60,10 @@ class Characters::Stick1V2::States::RunningAttackRight < Character::State
         end
       end
     elsif local_time > 0.35
-      if controls.control_down?('move right')
+      if controls.latest_horizontal_move == 'move right'
         set_velocity time, 720
+      else
+        set_velocity time, 0
       end
     end    
   end

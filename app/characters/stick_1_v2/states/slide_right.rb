@@ -23,7 +23,7 @@ class Characters::Stick1V2::States::SlideRight < Character::State
     when 'move up'
       set_state "JumpRight"
     when 'attack punch'
-      if @next_state.include? "Left"
+      if controls.latest_horizontal_move == "move left"
         set_state "PunchLeft"
       else
         set_state "PunchRight"

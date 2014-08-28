@@ -3,7 +3,7 @@ class Characters::Stick1V2::States::PreBlockRight < Character::State
   
   def initialize character
     @character = character
-    @duration = 0.2
+    @duration = 0.18
     @sprite_sheet_id = 'pre_block'
     @sprite_options = {'factor_x' => -1, 'duration' => @duration, 'mode' => "forward"}
     @movement_options = {'on_surface' => true, 'velocity' => 0}
@@ -20,6 +20,8 @@ class Characters::Stick1V2::States::PreBlockRight < Character::State
       set_state "DashForwardRight"
     when 'move left'
       set_state "DashBackwardRight"
+    when 'move up'
+      set_state "JumpRight"
     end
   end
   

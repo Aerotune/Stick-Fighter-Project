@@ -1,17 +1,17 @@
 class Components::Sprite < Component
-  attr_accessor :start_time, :name, :center_x, :center_y, :images, :factor_x, :fps, :mode, :image, :index, :done
+  attr_accessor :start_time, :name, :center_x, :center_y, :factor_x, :fps, :mode, :frames, :frame, :index, :done
   
   def initialize options
     @start_time = options["start_time"]
     @name     = options["name"]
     @center_x = options["center_x"]
     @center_y = options["center_y"]
-    @images   = options["images"]
+    @frames   = options["frames"]
     @factor_x = options["factor_x"] || 1
-    @fps      = @images.length.to_f / options["duration"] if options["duration"]
+    @fps      = @frames.length.to_f / options["duration"] if options["duration"]
     @fps    ||= options["fps"]  || 27
     @mode     = options["mode"] || "loop"
-    @image    = @images.first
+    @frame    = @frames.first
     @index    = 0
     @done     = false
   end
@@ -24,7 +24,7 @@ class Components::Sprite < Component
   def done?
     case mode
     when 'forward'
-      @index == @images.length - 1
+      @index >= @frames.length - 1
     when 'backward'
       @index == 0
     else
@@ -33,6 +33,6 @@ class Components::Sprite < Component
   end
   
   def progress
-    @index.to_f/@images.length
+    @index.to_f/@frames.length
   end
 end

@@ -19,6 +19,8 @@ class Characters::Stick1V2::States::BlockLeft < Character::State
       set_state "DashForwardLeft"
     when 'move right'
       set_state "DashBackwardLeft"
+    when 'move up'
+      set_state "JumpLeft"
     end
   end
   

@@ -208,7 +208,7 @@ class Stage
         player.hit_level_down = object.top    if hit_down
         player.hit_level_up   = object.bottom if hit_up
         player.hit_level_right = object.left - hit_box.width/2.0  if hit_right
-        player.hit_level_left = object.right + hit_box.width/2.0  if hit_left
+        player.hit_level_left = object.right + hit_box.width/2.0  if hit_left        
       end
       
       

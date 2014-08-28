@@ -22,8 +22,8 @@ class Window < Gosu::Window
     
     @current_sprite_sheet_index = 0
     @current_sprite_sheet = @sprite_sheets[@sprite_sheets.keys[@current_sprite_sheet_index]]
-    @image = @current_sprite_sheet["images"].first
-    @image_index = 0
+    @frame = @current_sprite_sheet["frames"].first
+    @frame_index = 0
   end
   
   def needs_cursor?
@@ -39,7 +39,7 @@ class Window < Gosu::Window
       @mouse_start_y = mouse_y
     when Gosu::KbTab
       delta_index = (button_down?(Gosu::KbLeftShift) || button_down?(Gosu::KbRightShift)) ? 1 : -1
-      @image_index = 0
+      @frame_index = 0
       @current_sprite_sheet_index = (@current_sprite_sheet_index - delta_index) % @sprite_sheets.length
       @current_sprite_sheet = @sprite_sheets[@sprite_sheets.keys[@current_sprite_sheet_index]]
     when Gosu::KbRight
@@ -67,8 +67,8 @@ class Window < Gosu::Window
   
   def update
         
-    @image_index = (@image_index + 27.0/60.0) % @current_sprite_sheet["images"].length
-    @image = @current_sprite_sheet["images"][@image_index]
+    @frame_index = (@frame_index + 27.0/60.0) % @current_sprite_sheet["frames"].length
+    @frame = @current_sprite_sheet["frames"][@frame_index]
     
     if button_down? Gosu::MsLeft
       @current_sprite_sheet["center_x"] = @start_center_x + (@mouse_start_x - mouse_x) 
@@ -90,7 +90,7 @@ class Window < Gosu::Window
       @anchor_point_x+radius, @anchor_point_y+radius, color, 
       @anchor_point_x+radius, @anchor_point_y-radius, color 
     
-    @image.draw @anchor_point_x-@current_sprite_sheet["center_x"],@anchor_point_y-@current_sprite_sheet["center_y"],0
+    @frame['image'].draw @anchor_point_x-@current_sprite_sheet["center_x"]+@frame['offset_x'].to_f,@anchor_point_y-@current_sprite_sheet["center_y"].to_f+@frame['offset_y'].to_f,0
   end
   
   def fill c1, c2=c1, c3=c2, c4=c3

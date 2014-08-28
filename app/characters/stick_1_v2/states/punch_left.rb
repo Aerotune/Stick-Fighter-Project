@@ -3,7 +3,7 @@ class Characters::Stick1V2::States::PunchLeft < Character::State
   
   def initialize character
     @character = character
-    @duration = 0.33
+    @duration = 0.35
     @sprite_sheet_id = 'punch'
     @sprite_options = {'factor_x' => 1, 'duration' => @duration, 'mode' => "forward"}
     @movement_options = {'on_surface' => true}
@@ -35,7 +35,7 @@ class Characters::Stick1V2::States::PunchLeft < Character::State
     if @has_punched
       remove_punch_hit_box if local_time > @duration * 0.5
     else
-      if local_time > @duration * 0.35
+      if local_time > @duration * 0.45
         @has_punch = true
         create_punch_hit_box 'left'
       end

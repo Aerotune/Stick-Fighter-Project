@@ -16,14 +16,25 @@ class Characters::Stick1V2::States::JumpRight < Character::State
   def control_up control
     case control
     when 'move up'
-      set_in_air_transition_time_y @character.time, 1.115
+      set_in_air_transition_time_y @character.time, 0.86701
     end
   end
   
   def control_down control
     case control
     when 'move down'
-      set_in_air_transition_time_y @character.time, 0.547
+      set_in_air_transition_time_y @character.time, 0.86701
+    when 'attack punch'
+      case controls.latest_move
+      when "move up"
+        set_state "InAirKickUpRight"
+      when "move right"
+        set_state "InAirKickRight"
+      when "move down"
+        set_state "InAirAttackDownRight"
+      else
+        set_state "InAirPunchRight"
+      end
     end
   end
   

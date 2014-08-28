@@ -16,14 +16,25 @@ class Characters::Stick1V2::States::JumpLeft < Character::State
   def control_up control
     case control
     when 'move up'
-      set_in_air_transition_time_y @character.time, 1.115
+      set_in_air_transition_time_y @character.time, 0.86701
     end
   end
   
   def control_down control
     case control
     when 'move down'
-      set_in_air_transition_time_y @character.time, 0.547
+      set_in_air_transition_time_y @character.time, 0.86701
+    when 'attack punch'
+      case controls.latest_move
+      when "move up"
+        set_state "InAirKickUpLeft"
+      when "move left"
+        set_state "InAirKickLeft"
+      when "move down"
+        set_state "InAirAttackDownLeft"
+      else
+        set_state "InAirPunchLeft"
+      end
     end
   end
   

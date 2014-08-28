@@ -33,7 +33,7 @@ class Window < Gosu::Window
     end
     @game_state.button_down id if @game_state.respond_to? :button_down
   end
-  
+    
   def button_up id 
     @game_state.button_up id if @game_state.respond_to? :button_up
   end

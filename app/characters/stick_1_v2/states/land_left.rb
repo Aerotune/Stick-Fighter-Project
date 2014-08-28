@@ -1,7 +1,7 @@
 class Characters::Stick1V2::States::LandLeft < Character::State  
   def initialize character
     @character = character
-    @duration = 0.18
+    @duration = 0.25
     @sprite_sheet_id = 'land'
     @sprite_options = {'factor_x' => 1, 'duration' => @duration}
     @movement_options = {'on_surface' => true, 'velocity' => 0}
@@ -23,13 +23,13 @@ class Characters::Stick1V2::States::LandLeft < Character::State
     
     case control
     when 'move up'
-      set_state "JumpLeft" if local_time > @duration / 2.6
+      set_state "JumpLeft" if local_time > @duration * 0.3
     end
   end
   
   def update_game_logic time
     return set_state "InAirLeft" unless @character.hit_level_down
-    
+    return set_state "PreBlockLeft" if controls.control_down? "block"
     local_time = time - @state_set_time
     current_velocity_x = velocity_x(time)
     

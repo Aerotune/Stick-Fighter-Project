@@ -23,7 +23,7 @@ class Characters::Stick1V2::States::IdleLeft < Character::State
   
   def update_game_logic time
     return set_state "InAirLeft" unless @character.hit_level_down
-    set_state "BlockLeft" if controls.control_down? "block"
+    set_state "PreBlockLeft" if controls.control_down? "block"
   end
   
   def on_hit options
