@@ -3,12 +3,14 @@ require 'json'
 Settings::CONTROLS = {}
 
 class Controls
+  Infinity = 1.0/0.0
   attr_reader :moves
   
   def initialize control_for_key
     @control_for_key = control_for_key
     @moves = []
     @listeners = []
+    @control_down_time = {}
   end
   
   def [] key_symbol
@@ -24,7 +26,7 @@ class Controls
   end
   
   def latest_horizontal_move
-    (@moves - ['move up']).last
+    @moves.select { |move| ['move left', 'move right'].include? move }.last
   end
   
   def latest_move
@@ -37,10 +39,21 @@ class Controls
     $window.button_down?(button_id)
   end
   
+  def time_since_control_down control
+    control_down_time = @control_down_time[control]
+    if control_down_time
+      Time.now.to_f - control_down_time
+    else
+      -Infinity
+    end
+  end
+  
   def button_down id
     key_symbol = KEY_SYMBOLS[id]
     control = @control_for_key[key_symbol]
     if control
+      @control_down_time[control] = Time.now.to_f
+      
       if control.include? 'move'
         @moves << control
       end

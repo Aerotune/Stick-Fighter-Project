@@ -1,0 +1,11 @@
+TODO
+create transition time based on acceleration
+create states for game logic like on_ground_all_moves and in_air_all_moves, in_air_movement
+create timer for controls so you have to  tap right + attack to kick
+
+wanted animations
+tap down + attack = swipe
+
+KNOWN ISSUES
+USB Apple keyboard does not register all keys when you press down + right + n ???
+Crashes on windows 8?

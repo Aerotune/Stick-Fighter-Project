@@ -2,21 +2,21 @@ class Character
   Dir[File.join(File.dirname(__FILE__), *%w[character *.rb])].each { |file| require file }
   
   attr_accessor :hit_level_up, :hit_level_down, :hit_level_right, :hit_level_left
-  attr_reader :controls, :state_name, :states, :entity_manager, :entity, :stage, :current_state, :time_queue
+  attr_reader :controls, :animation_state_name, :animation_states, :entity_manager, :entity, :stage, :current_animation_state, :time_queue
   
   def initialize entity_manager, entity, stage, controls
     @entity_manager = entity_manager
     @entity = entity
     @stage = stage
     @controls = controls
-    @states = {}
+    @animation_states = {}
     
     @time_queue = TimeQueue.new
             
     self.class.require_image_resource
-    self.class::States.constants.each do |state_name|
-      state_class = self.class::States.const_get(state_name)
-      @states[state_name.to_s] = state_class.new self
+    self.class::AnimationStates.constants.each do |state_name|
+      state_class = self.class::AnimationStates.const_get(state_name)
+      @animation_states[state_name.to_s] = state_class.new self
     end
   end
   
@@ -30,9 +30,9 @@ class Character
   end
   
   def update_game_logic time
-    if @current_state
-      @current_state.update_collision_game_logic time
-      @current_state.update_game_logic time 
+    if @current_animation_state
+      @current_animation_state.update_collision_game_logic time
+      @current_animation_state.update_game_logic time 
     end
   end
   
@@ -49,15 +49,15 @@ class Character
   end
   
   def control_down control
-    @current_state.control_down control if @current_state.respond_to? :control_down
+    @current_animation_state.control_down control if @current_animation_state.respond_to? :control_down
   end
   
   def control_up control
-    @current_state.control_up control if @current_state.respond_to? :control_up
+    @current_animation_state.control_up control if @current_animation_state.respond_to? :control_up
   end
   
   def on_hit options
-    @current_state.on_hit options if @current_state.respond_to? :on_hit
+    @current_animation_state.on_hit options if @current_animation_state.respond_to? :on_hit
   end
   
   class << self

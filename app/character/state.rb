@@ -60,7 +60,7 @@ class Character::State
   end
   
   def set_state state_name, options={}
-    @character.current_state.on_unset if @character.current_state.respond_to? :on_unset
+    @character.current_animation_state.on_unset if @character.current_animation_state.respond_to? :on_unset
     time    = @character.time
     command = Commands::SetState.new(@character, state_name, time, options)
     event   = TimeQueue::Event.new time, command

@@ -6,7 +6,7 @@ class Commands::SetNextState < Command
   def do_action
     return if @run_once
     @run_once = true
-    @character.current_state.set_next_state unless @state_set
+    @character.current_animation_state.set_next_state unless @state_set
   end
   
   def undo_action

@@ -39,8 +39,8 @@ class Stage::Background
     @parallax_images << Stage::Background::ParallaxImage.new(@@pyramide_image_2, 8000, $window.height*3,    z, @vanishing_point_x, @vanishing_point_y, 0.03, 'haze' => 0.35)
     @parallax_images << Stage::Background::ParallaxImage.new(@@oasis_image,      1000, $window.height*3.5,    z, @vanishing_point_x, @vanishing_point_y, 0.05, 'haze' => 0.2)
     @parallax_images << Stage::Background::ParallaxImage.new(@@pyramide_image_1, -4000, $window.height*4.5,   z, @vanishing_point_x, @vanishing_point_y, 0.1)
-    @parallax_images << Stage::Background::Dust         .new(@@dust_image,        3000, $window.height*4.3, z, @vanishing_point_x, @vanishing_point_y, 0.16, 'velocity_x' => -12)
-    @parallax_images << Stage::Background::Dust         .new(@@dust_image,        3000, $window.height*3.0, 100, @vanishing_point_x, @vanishing_point_y, 0.5, 'velocity_x' => -12)
+    @parallax_images << Stage::Background::Dust         .new(@@dust_image,        3000, $window.height*2.5, z+0.1, @vanishing_point_x, @vanishing_point_y, 0.16, 'velocity_x' => -12)
+    @parallax_images << Stage::Background::Dust         .new(@@dust_image,        3000, $window.height*1.9, 100, @vanishing_point_x, @vanishing_point_y, 0.45, 'velocity_x' => -12)
     @parallax_images.sort! { |a,b| a.z <=> b.z }
     
   end

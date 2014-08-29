@@ -17,8 +17,8 @@ class Stage
   
   def initialize
     @characters = {}
-    @camera = Camera.new 1350, 900, 0.8
-    @background_camera = Camera.new 1350, 900, 0.8
+    @camera = Camera.new 1350, 900-1000, 0.8
+    @background_camera = Camera.new 1350, 900-1000, 0.8
     @background = Stage::Background.new
     @camera_filtering = 0.01
     @background.update @camera
@@ -35,8 +35,8 @@ class Stage
     @players = {}
     @level_objects = []
     
-    add_player 'player2', 200, 200, "IdleRight", [0.2, 0.0, 0.4]
-    add_player 'player1', 2500, 1600, "IdleLeft", [0.4, 0.05, 0.0]
+    add_player 'player2', 200, 200-1000, "IdleRight", [0.2, 0.0, 0.4]
+    add_player 'player1', 2500, 1600-1000, "IdleLeft", [0.4, 0.05, 0.0]
   end
   
   def live?
@@ -165,7 +165,7 @@ class Stage
     
     @characters.values.each do |character|
       position = character.get_component(Components::Position)
-      if position.y > 3000
+      if position.y > 2000
         $window.reset_stage
       end
     end
