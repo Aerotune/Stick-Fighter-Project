@@ -7,6 +7,7 @@ class Characters::Stick1V2::AnimationStates::InAirAttackDownRight < Character::S
     @sprite_sheet_id = 'in_air_attack_down'
     @sprite_options = {'factor_x' => -1, 'duration' => @duration, 'mode' => "forward"}
     @movement_options = {'on_surface' => false}
+    @controller_states = ["InAirReactivesRight"]
   end
   
   def on_set options

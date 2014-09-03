@@ -4,8 +4,8 @@ module Factories::Player
     
     position = Components::Position.new(x, y)
     tint = Components::Tint.new(tint_color)
-    hit_box_width = 60
-    hit_box_height = 190
+    hit_box_width = 55
+    hit_box_height = 185
     hit_box = Components::HitBox.new(-hit_box_width/2.0, -hit_box_height, hit_box_width, hit_box_height)
     
     entity_manager.add_component entity, position

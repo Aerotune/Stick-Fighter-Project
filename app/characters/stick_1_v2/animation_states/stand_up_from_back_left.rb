@@ -15,7 +15,16 @@ class Characters::Stick1V2::AnimationStates::StandUpFromBackLeft < Character::St
     local_time = time - @state_set_time
     
     if local_time > @duration
-      set_state "IdleLeft"
+      if controls.control_down? 'block'
+        case controls.latest_horizontal_move
+        when 'move right'; set_state "DashBackwardLeft"
+        when 'move left';  set_state "DashForwardLeft"
+        else
+          set_state "BlockLeft", 'punched' => false
+        end
+      else
+        set_state "IdleLeft"
+      end
     elsif (local_time > @duration - 0.25) && !@has_hit_box
       @has_hit_box = true
       @stand_up_hit_box_right = Factories::PunchHitBox.construct @character, 'right', 'offset_x' => 5, 'width' => 65

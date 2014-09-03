@@ -7,13 +7,7 @@ class Characters::Stick1V2::AnimationStates::JabLeft < Character::State
     @sprite_sheet_id = 'jab'
     @sprite_options = {'factor_x' => 1, 'duration' => @duration, 'mode' => "forward"}
     @movement_options = {'on_surface' => true}
-  end
-  
-  def on_hit options
-    case options['punch_direction']
-    when 'right'; set_state "PunchedFrontLeft"
-    when 'left' ; set_state "PunchedBehindLeft"
-    end
+    @controller_states = ["StandingBalanceNeutralReactivesLeft"]
   end
   
   def control_down control
@@ -42,11 +36,11 @@ class Characters::Stick1V2::AnimationStates::JabLeft < Character::State
     else
       
       if @has_punched
-        remove_punch_hit_box if local_time > @duration * 0.5
+        remove_punch_hit_box if local_time > @duration * 0.6
       else
-        if local_time > @duration * 0.35
-          @has_punch = true
-          create_punch_hit_box 'left', 'offset_x' => 30
+        if local_time > @duration * 0.4
+          @has_punched = true
+          create_punch_hit_box 'left', 'strength' => 1.0, 'width' => 100, 'offset_x' => 0
         end
       end
       

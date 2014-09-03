@@ -4,6 +4,7 @@ class Characters::Stick1V2::AnimationStates::RunLeft < Character::State
     @sprite_sheet_id = 'run_loop'
     @sprite_options = {'factor_x' => 1, 'fps' => 30}
     @movement_options = {'on_surface' => true, 'velocity' => -720}
+    @controller_states = ["StandingAttacksLeft", "StandingBalanceNeutralReactivesLeft"]
   end
   
   def on_set options
@@ -18,13 +19,7 @@ class Characters::Stick1V2::AnimationStates::RunLeft < Character::State
   def control_down control
     case control
     when 'move right'; set_state "SlideLeft", 'next_state' => "RunRight"
-    when 'move up'   ; set_state "JumpLeft"   
-    when 'attack punch'
-      if controls.control_down?('move left') && controls.time_since_control_down('move left') < 0.125
-        set_state "RunningAttackLeft"
-      else
-        set_state "PunchLeft"
-      end   
+    when 'move up'   ; set_state "JumpLeft" 
     end
   end
   

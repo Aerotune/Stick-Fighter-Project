@@ -19,6 +19,6 @@ class Stage::Background::Ground
   end
   
   def draw
-    @image.draw @screen_x, @screen_y, @z
+    @image.draw @screen_x, @screen_y, @z, 2.0
   end
 end

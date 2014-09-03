@@ -6,13 +6,7 @@ class Characters::Stick1V2::AnimationStates::SlideLeft < Character::State
     @sprite_sheet_id = 'slide'
     @sprite_options = {'factor_x' => 1, 'duration' => @duration, 'mode' => 'forward'}
     @movement_options = {'on_surface' => true, 'velocity' => 0}
-  end
-  
-  def on_hit options
-    case options['punch_direction']
-    when 'right'; set_state "PunchedFrontLeft"
-    when 'left' ; set_state "PunchedBehindLeft"
-    end
+    @controller_states = ["StandingBalanceNeutralReactivesLeft"]
   end
   
   def control_down control

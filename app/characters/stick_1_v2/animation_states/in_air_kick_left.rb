@@ -3,16 +3,17 @@ class Characters::Stick1V2::AnimationStates::InAirKickLeft < Character::State
   
   def initialize character
     @character = character
-    @duration = 0.4
+    @duration = 0.45
     @sprite_sheet_id = 'in_air_kick'
     @sprite_options = {'factor_x' => 1, 'duration' => @duration, 'mode' => "forward"}
     @movement_options = {'on_surface' => false}
+    @controller_states = ["InAirReactivesLeft"]
   end
   
   def control_down control
     case control
     when 'move down'
-      set_in_air_transition_time_y @character.time, 0.86701
+      set_in_air_transition_time_y @character.time, 0.86701 unless @landed
     end
   end
   
@@ -21,10 +22,26 @@ class Characters::Stick1V2::AnimationStates::InAirKickLeft < Character::State
     @landed = false
   end
   
+  def on_unset
+    remove_punch_hit_box
+    @has_hit_box = false
+  end
+  
   def update_game_logic time 
     local_time = time - @state_set_time
+    
+    if @has_hit_box && local_time > @duration * 0.4
+      remove_punch_hit_box
+    elsif !@has_hit_box && local_time > @duration * 0.18
+      @has_hit_box = true
+      create_punch_hit_box 'left', 'offset_x' => 0, 'width' => 110, 'strength' => 2.0, 'offset_y' => -150, 'height' => 40
+    end
        
     if @character.hit_level_down
+      if local_time > @duration * 0.3 && local_time < @duration * 0.4
+        return set_state "FallToBackLeft", 'start_y' => @character.hit_level_down, 'squelch' => true
+      end
+      
       if local_time > @duration
         set_state "LandLeft", 'start_y' => @character.hit_level_down
       elsif !@landed

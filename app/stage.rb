@@ -113,18 +113,23 @@ class Stage
     player_min_y -= $window.height*1.5
     player_max_y += $window.height/1.5
     
+    
+    
     camera_x = (player_min_x + player_max_x) / 2.0
     camera_y = (player_min_y + player_max_y) / 2.0
-    
+        
     distance = Gosu.distance player_min_x, player_min_y, player_max_x, player_max_y
-    distance = distance - 500.0
+    distance = distance - 1200.0
     distance = 0.0 if distance < 0.0
-    zoom =  0.55 - ((distance)/1500)**0.4*0.28
-    zoom = 0.15 if zoom < 0.15
-    zoom = 1.0 if zoom > 1.0
+    distance = 9000.0 if distance > 6000.0
+    zoom_out = ((distance)/16000.0)**0.1 * (1000.0 / $window.width)
+    zoom_out = 0.85 if zoom_out > 0.85
+    zoom =  1.0 - zoom_out# * 0.9
+    #zoom = 0.15 if zoom < 0.15
+    #zoom = 1.0 if zoom > 1.0
     
     @camera_filtering += 0.0005
-    @camera_filtering = 0.15 if @camera_filtering > 0.15
+    @camera_filtering = 0.125 if @camera_filtering > 0.125
     camera_delta_zoom = zoom - @camera.zoom
     @camera.zoom += camera_delta_zoom*@camera_filtering
     
@@ -137,6 +142,14 @@ class Stage
     @camera.x += camera_dx*@camera_filtering
     @camera.y += camera_dy*@camera_filtering 
         
+    if $shake && Time.now.to_f - $shake < 0.12
+      @camera.x += (rand-0.5) * $shake_amount * 0.7
+      @camera.y += (rand-0.5) * $shake_amount * 0.7
+      @camera.angle += ((rand-0.5) * $shake_amount - @camera.angle) * 0.1
+    else
+      @camera.angle *= 0.9
+    end
+    
     SoundResource.play('wind' ,wind_strength, 1.0+wind_strength)
     
     
@@ -188,18 +201,19 @@ class Stage
         next_right  = next_left       + hit_box.width
         next_top    = position.next_y + hit_box.offset_y
         next_bottom = next_top        + hit_box.height
-        height = hit_box.height - hit_box.width/2.0
+        #height = hit_box.height - hit_box.width/2.0
         
         hit_x = (object.left .. object.right) === position.x
         hit_down = hit_x && (bottom <= object.top) && (next_bottom >= object.top)
-        hit_up   = hit_x && (top >= object.bottom) && (next_top <= object.bottom)
         
         #hit_y = (top + hit_box.width/2.0 .. bottom - hit_box.width/2.0).overlaps?(object.top..object.bottom)
         #hit_left  = hit_y && (left >= object.right) && (next_left <= object.right)
         #hit_right = hit_y && (right <= object.left) && (next_right >= object.left)
         if object.solid
+          hit_up   = hit_x && (top >= object.bottom) && (next_top <= object.bottom)
+          
           object_middle = object.left + object.width/2.0
-          hit_y = (top + hit_box.width/2.0 .. bottom - hit_box.width/2.0).overlaps?(object.top..object.bottom)
+          hit_y = (top + 50 .. bottom - 50).overlaps?(object.top..object.bottom)
           hit_left  = hit_y && (object_middle..object.right) === next_left
           hit_right = hit_y && (object.left..object_middle) === next_right
         end
@@ -219,21 +233,20 @@ class Stage
   
   def draw
     #$window.fill 0xFF557BC6, 0xFF4F91ED
-    @background.draw
-    #$window.scale 0.32, 0.32, -100, -50 do
-    #$window.scale 0.45, 0.45, $window.width/2, $window.height/2 do
-      #$window.translate -position.x+$window.width/2, -position.y+$window.height/3*2 do          
-        @level.draw @camera
-        Systems::Sprite.draw @entity_manager, @camera
-        #Systems::HitTest.draw @entity_manager # for some reason this stops $window.blur from working
-        #end
-    #end
+    $window.rotate @camera.angle, $window.width/2.0, $window.height/2.0 do
+      @background.draw
+      @level.draw @camera
+    end
+    
+    
+    Systems::Sprite.draw @entity_manager, @camera
+    Systems::HitTest.draw @entity_manager, @camera if $show_hit_boxes # for some reason this stops $window.blur from working
     #$window.blur
     unless live?
       if $window.button_down? Gosu::KbSpace
-        @font.draw "REPLAY <<", 10, 10, 0
+        @font.draw "REPLAY <<", 10, 10, 0, 1, 1, 0xFF000000
       else
-        @font.draw "REPLAY >>", 10, 10, 0
+        @font.draw "REPLAY >>", 10, 10, 0, 1, 1, 0xFF000000
       end
     end
     

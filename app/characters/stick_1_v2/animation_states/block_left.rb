@@ -6,6 +6,7 @@ class Characters::Stick1V2::AnimationStates::BlockLeft < Character::State
     @sprite_sheet_id = 'block'
     @sprite_options = {'factor_x' => 1, 'fps' => 33, 'mode' => "forward"}
     @movement_options = {'on_surface' => true}
+    @controller_states = ["StandingAttacksLeft"]
   end
   
   def update_game_logic time
@@ -38,10 +39,14 @@ class Characters::Stick1V2::AnimationStates::BlockLeft < Character::State
     end
   end
   
-  def on_hit options
-    case options['punch_direction']
+  def on_hit punch_hit_box
+    case punch_hit_box.hit_direction
     when 'right'
-      set_state 'BlockLeft', 'punched' => true
+      if punch_hit_box.strength > 1.5
+        set_state 'PunchedFrontLeft'
+      else
+        set_state 'BlockLeft', 'punched' => true
+      end
     when 'left'
       set_state 'PunchedBehindLeft'
     end

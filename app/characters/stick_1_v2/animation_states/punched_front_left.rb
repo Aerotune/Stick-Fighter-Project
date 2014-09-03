@@ -7,6 +7,7 @@ class Characters::Stick1V2::AnimationStates::PunchedFrontLeft < Character::State
     @sprite_sheet_id = 'punched_front'
     @sprite_options = {'factor_x' => 1, 'duration' => @duration, 'mode' => "forward"}
     @movement_options = {'on_surface' => true}
+    @controller_states = ["StandingBalanceBackwardReactivesLeft"]
   end
   
   def on_set options
@@ -20,19 +21,6 @@ class Characters::Stick1V2::AnimationStates::PunchedFrontLeft < Character::State
     
     if local_time > @duration
       set_state "IdleLeft"
-    end
-  end
-  
-  def on_hit options
-    case options['punch_direction']
-    when 'left'
-      set_state "PunchedBehindLeft"
-    when 'right'
-      if controls.control_down? 'move right'
-        set_state "StaggerBackwardLeft"
-      else
-        set_state "FallToBackLeft"
-      end
     end
   end
 end

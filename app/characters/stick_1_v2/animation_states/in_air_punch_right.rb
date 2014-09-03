@@ -3,26 +3,35 @@ class Characters::Stick1V2::AnimationStates::InAirPunchRight < Character::State
   
   def initialize character
     @character = character
-    @duration = 0.3
+    @duration = 0.38
     @sprite_sheet_id = 'in_air_punch'
     @sprite_options = {'factor_x' => -1, 'duration' => @duration, 'mode' => "forward"}
     @movement_options = {'on_surface' => false}
+    @controller_states = ["InAirReactivesRight"]
   end
   
   def control_down control
     case control
     when 'move down'
-      set_in_air_transition_time_y @character.time, 0.86701
+      set_in_air_transition_time_y @character.time, 0.86701 unless @landed
     end
   end
   
   def on_set options
     @landed = false
+    @has_hit_box = false
   end
   
   def update_game_logic time 
     local_time = time - @state_set_time
-       
+    
+    if !@has_hit_box && local_time > @duration * 0.4
+      create_punch_hit_box 'right', 'strength' => 1.0, 'offset_x' => 0, 'width' => 90, 'height' => 40
+      @has_hit_box = true
+    elsif @has_hit_box && local_time > @duration * 0.6
+      remove_punch_hit_box
+    end
+    
     if @character.hit_level_down
       if local_time > @duration
         set_state "LandRight", 'start_y' => @character.hit_level_down

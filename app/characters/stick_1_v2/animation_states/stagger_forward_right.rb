@@ -3,14 +3,16 @@ class Characters::Stick1V2::AnimationStates::StaggerForwardRight < Character::St
   
   def initialize character
     @character = character
-    @duration = 0.8
+    @duration = 0.6
     @sprite_sheet_id = 'stagger_forward'
     @sprite_options = {'factor_x' => -1, 'duration' => @duration, 'mode' => "forward"}
     @movement_options = {'on_surface' => true}
+    @controller_states = ["StandingBalanceForwardReactivesRight"]
   end
   
   def on_set options
     SoundResource.play 'punched'
+    ease_position 'distance' => 220, 'transition_time' => @duration, 'start_time' => @character.time
   end
   
   def update_game_logic time
@@ -21,9 +23,5 @@ class Characters::Stick1V2::AnimationStates::StaggerForwardRight < Character::St
     if local_time > @duration
       set_state "IdleRight"
     end
-  end
-  
-  def on_set options
-    ease_position 'distance' => 220, 'transition_time' => @duration, 'start_time' => @character.time
   end
 end

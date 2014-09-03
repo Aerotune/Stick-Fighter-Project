@@ -5,5 +5,6 @@ module ZOrder
   LEVEL,
   CHARACTER,
   LEVEL_FRONT,
-  SUNFLARE_OUTER = *0..100
+  SUNFLARE_OUTER,
+  HIT_BOX = *0..100
 end

@@ -5,18 +5,12 @@ class Characters::Stick1V2::AnimationStates::LandRight < Character::State
     @sprite_sheet_id = 'land'
     @sprite_options = {'factor_x' => -1, 'duration' => @duration}
     @movement_options = {'on_surface' => true, 'velocity' => 0}
+    @controller_states = ["StandingBalanceNeutralReactivesRight"]
   end
   
   def on_set options
     SoundResource.play 'land'
     @slide_next_state = "IdleRight"
-  end
-  
-  def on_hit options
-    case options['punch_direction']
-    when 'right'; set_state "PunchedBehindRight"
-    when 'left' ; set_state "PunchedFrontRight"
-    end
   end
   
   def control_down control

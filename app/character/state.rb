@@ -1,5 +1,5 @@
 class Character::State
-  attr_accessor :state_set_time
+  attr_accessor :state_set_time, :controller_states
   
   def entity_manager
     @character.entity_manager
@@ -10,13 +10,20 @@ class Character::State
   end
   
   def update_collision_game_logic time
-    if @character.hit_level_right
-      @character.time_queue.add time, Commands::RemoveVelocity.new(entity_manager, entity, time, 'start_x' => @character.hit_level_right)
+    if @character.hit_level_up
+      hit_box_height = 185
+      @character.time_queue.add time, Commands::RemoveVelocityY.new(entity_manager, entity, time, 'start_y' => @character.hit_level_up+hit_box_height+10)
+    else
+      if @character.hit_level_right
+        @character.time_queue.add time, Commands::RemoveVelocity.new(entity_manager, entity, time, 'start_x' => @character.hit_level_right)
+      end
+    
+      if @character.hit_level_left
+        @character.time_queue.add time, Commands::RemoveVelocity.new(entity_manager, entity, time, 'start_x' => @character.hit_level_left)
+      end
     end
     
-    if @character.hit_level_left
-      @character.time_queue.add time, Commands::RemoveVelocity.new(entity_manager, entity, time, 'start_x' => @character.hit_level_left)
-    end
+    
   end
   
   #def state_trigger! control_triggers
@@ -108,6 +115,15 @@ class Character::State
       unless (terminal_velocity_x > 0.0 && @character.hit_level_right) || (terminal_velocity_x < 0.0 && @character.hit_level_left)
         @character.time_queue.add time, Commands::UpdateMovementInAir.new(entity_manager, entity, time, 'terminal_velocity_x' => terminal_velocity_x)
       end
+    end
+  end
+  
+  def set_in_air_velocity_y time, terminal_velocity_y
+    movement = @character.get_component(Components::Movement).movement
+    unless movement.terminal_velocity_y == terminal_velocity_y
+      #unless (terminal_velocity_y > 0.0 && @character.hit_level_right) || (terminal_velocity_x < 0.0 && @character.hit_level_left)
+        @character.time_queue.add time, Commands::UpdateMovementInAir.new(entity_manager, entity, time, 'terminal_velocity_y' => terminal_velocity_y)
+        #end
     end
   end
   

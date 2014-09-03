@@ -7,13 +7,7 @@ class Characters::Stick1V2::AnimationStates::PunchLeft < Character::State
     @sprite_sheet_id = 'punch'
     @sprite_options = {'factor_x' => 1, 'duration' => @duration, 'mode' => "forward"}
     @movement_options = {'on_surface' => true}
-  end
-  
-  def on_hit options
-    case options['punch_direction']
-    when 'right'; set_state "PunchedFrontLeft"
-    when 'left' ; set_state "PunchedBehindLeft"
-    end
+    @controller_states = ["StandingBalanceNeutralReactivesLeft"]
   end
   
   def control_down control
@@ -33,11 +27,11 @@ class Characters::Stick1V2::AnimationStates::PunchLeft < Character::State
     end
     
     if @has_punched
-      remove_punch_hit_box if local_time > @duration * 0.5
+      remove_punch_hit_box if local_time > @duration * 0.65
     else
-      if local_time > @duration * 0.53
-        @has_punch = true
-        create_punch_hit_box 'left'
+      if local_time > @duration * 0.5
+        @has_punched = true
+        create_punch_hit_box 'left', 'strength' => 1.0, 'offset_x' => 0, 'offset_y' => -145
       end
     end
     

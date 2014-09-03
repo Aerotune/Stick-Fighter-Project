@@ -5,6 +5,7 @@ class Characters::Stick1V2::AnimationStates::LandLeft < Character::State
     @sprite_sheet_id = 'land'
     @sprite_options = {'factor_x' => 1, 'duration' => @duration}
     @movement_options = {'on_surface' => true, 'velocity' => 0}
+    @controller_states = ["StandingBalanceNeutralReactivesLeft"]
   end
   
   def on_set options
@@ -12,8 +13,8 @@ class Characters::Stick1V2::AnimationStates::LandLeft < Character::State
     @slide_next_state = "IdleLeft"
   end
   
-  def on_hit options
-    case options['punch_direction']
+  def on_hit punch_hit_box
+    case punch_hit_box.hit_direction
     when 'right'; set_state "PunchedFrontLeft"
     when 'left' ; set_state "PunchedBehindLeft"
     end

@@ -21,8 +21,9 @@ class Characters::Stick1V2::AnimationStates::FallToBackLeft < Character::State
   end
   
   def on_set options
-    SoundResource.play 'punched'
+    SoundResource.play 'punched' unless options['squelch']
     SoundResource.play 'fall'
-    ease_position 'distance' => 90, 'transition_time' => @duration*0.5, 'start_time' => @character.time
+    distance = options['squelch'] ? 0 : 90
+    ease_position 'distance' => distance, 'transition_time' => @duration*0.5, 'start_time' => @character.time
   end
 end

@@ -15,7 +15,16 @@ class Characters::Stick1V2::AnimationStates::StandUpFromStomachRight < Character
     local_time = time - @state_set_time
     
     if local_time > @duration
-      set_state "IdleRight"
+      if controls.control_down? 'block'
+        case controls.latest_horizontal_move
+        when 'move left'; set_state "DashBackwardRight"
+        when 'move right';  set_state "DashForwardRight"
+        else
+          set_state "BlockRight", 'punched' => false
+        end
+      else
+        set_state "IdleRight"
+      end
     end
   end
 end

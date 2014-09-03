@@ -7,6 +7,7 @@ class Characters::Stick1V2::AnimationStates::JumpLeft < Character::State
     @sprite_sheet_id = 'jump'
     @sprite_options = {'factor_x' => 1, 'duration' => @duration, 'mode' => "forward"}
     @movement_options = {'on_surface' => false, 'start_velocity_y' => -1600}
+    @controller_states = ["InAirReactivesLeft"]
   end
   
   def on_set options
@@ -39,7 +40,7 @@ class Characters::Stick1V2::AnimationStates::JumpLeft < Character::State
           set_state "InAirPunchLeft"
         end
       else
-        if controls.control_down?("move down") && controls.time_since_control_down('move down') < 0.125
+        if controls.control_down?("move down")
           set_state "InAirAttackDownLeft"
         else
           set_state "InAirPunchLeft"

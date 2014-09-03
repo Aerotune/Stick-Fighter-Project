@@ -6,13 +6,7 @@ class Characters::Stick1V2::AnimationStates::SlideRight < Character::State
     @sprite_sheet_id = 'slide'
     @sprite_options = {'factor_x' => -1, 'duration' => @duration, 'mode' => 'forward'}
     @movement_options = {'on_surface' => true, 'velocity' => 0}
-  end
-  
-  def on_hit options
-    case options['punch_direction']
-    when 'right'; set_state "PunchedBehindRight"
-    when 'left' ; set_state "PunchedFrontRight"
-    end
+    @controller_states = ["StandingBalanceNeutralReactivesRight"]
   end
   
   def control_down control

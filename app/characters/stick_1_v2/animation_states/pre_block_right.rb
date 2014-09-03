@@ -7,6 +7,7 @@ class Characters::Stick1V2::AnimationStates::PreBlockRight < Character::State
     @sprite_sheet_id = 'pre_block'
     @sprite_options = {'factor_x' => -1, 'duration' => @duration, 'mode' => "forward"}
     @movement_options = {'on_surface' => true, 'velocity' => 0}
+    @controller_states = ["StandingAttacksRight"]
   end
   
   def update_game_logic time
@@ -39,14 +40,18 @@ class Characters::Stick1V2::AnimationStates::PreBlockRight < Character::State
     end
   end
   
-  def on_hit options
+  def on_hit punch_hit_box
     local_time = @character.time - @state_set_time
-    case options['punch_direction']
+    case punch_hit_box.hit_direction
     when 'left'
       if local_time < @duration * 0.8
         set_state "PunchedFrontRight"
       else
-        set_state "BlockRight", 'punched' => true
+        if punch_hit_box.strength > 1.5
+          set_state "PunchedFrontRight"
+        else
+          set_state "BlockRight", 'punched' => true
+        end
       end
     when 'right'
       set_state "PunchedBehindRight"

@@ -13,6 +13,7 @@ class Commands::UpdateMovementInAir < Command
     @prev_movement = movement.dup
     
     movement.set_terminal_velocity_x @start_time, @options['terminal_velocity_x'] if @options['terminal_velocity_x']
+    movement.set_terminal_velocity_y @start_time, @options['terminal_velocity_y'] if @options['terminal_velocity_y']
     movement.set_transition_time_y @start_time, @options['transition_time_y'] if @options['transition_time_y']
   end
   

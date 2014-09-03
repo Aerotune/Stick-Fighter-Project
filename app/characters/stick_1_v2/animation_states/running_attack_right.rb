@@ -3,17 +3,11 @@ class Characters::Stick1V2::AnimationStates::RunningAttackRight < Character::Sta
   
   def initialize character
     @character = character
-    @duration = 0.6
+    @duration = 0.7
     @sprite_sheet_id = 'dash_kick'
     @sprite_options = {'factor_x' => -1, 'duration' => @duration, 'mode' => "forward"}
     @movement_options = {'on_surface' => true}
-  end
-  
-  def on_hit options
-    case options['punch_direction']
-    when 'right'; set_state "PunchedBehindRight"
-    when 'left' ; set_state "PunchedFrontRight"
-    end
+    @controller_states = ["StandingBalanceBackwardReactivesRight"]
   end
   
   def control_down control
@@ -27,7 +21,7 @@ class Characters::Stick1V2::AnimationStates::RunningAttackRight < Character::Sta
     SoundResource.play 'punch' unless options['squelch']
     @attack_after = false
     @has_hit_box  = false
-    ease_position 'distance' => 220, 'transition_time' => 0.4, 'start_time' => @character.time
+    ease_position 'distance' => 190, 'transition_time' => 0.35, 'start_time' => @character.time
   end
   
   def update_game_logic time
@@ -36,13 +30,13 @@ class Characters::Stick1V2::AnimationStates::RunningAttackRight < Character::Sta
     local_time = time - @state_set_time
     
     if @has_hit_box
-      if local_time > @duration * 0.4
+      if local_time > @duration * 0.35
         remove_punch_hit_box
       end
     else
-      if local_time > @duration * 0.3
+      if local_time > @duration * 0.25
         @has_hit_box = true
-        create_punch_hit_box 'right', 'offset_x' => 0, 'width' => 80
+        create_punch_hit_box 'right', 'offset_x' => 0, 'offset_y' => -140, 'width' => 80, 'height' => 40, 'strength' => 2.0
       end
     end
     

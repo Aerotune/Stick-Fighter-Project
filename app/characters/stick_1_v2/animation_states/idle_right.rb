@@ -4,13 +4,13 @@ class Characters::Stick1V2::AnimationStates::IdleRight < Character::State
     @sprite_sheet_id = 'idle'
     @sprite_options = {'factor_x' => -1}
     @movement_options = {'on_surface' => true, 'velocity' => 0}
+    @controller_states = ["StandingAttacksRight", "StandingBalanceNeutralReactivesRight"]
     
     @state_triggers = {
       'control_down' => {
         'move right' => "RunRight",
         'move left' => "RunLeft",
         'move up' => "JumpRight",
-        'attack punch' => "PunchRight",
         'block' => "PreBlockRight"
       }
     }
@@ -24,12 +24,5 @@ class Characters::Stick1V2::AnimationStates::IdleRight < Character::State
   def update_game_logic time
     return set_state "InAirRight" unless @character.hit_level_down
     set_state "PreBlockRight" if controls.control_down? "block"
-  end
-  
-  def on_hit options
-    case options['punch_direction']
-    when 'right'; set_state "PunchedBehindRight"
-    when 'left' ; set_state "PunchedFrontRight"
-    end
   end
 end

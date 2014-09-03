@@ -46,19 +46,19 @@ class Stage::Background
   end
   
   def update camera
-    unless @current_song && @current_song.playing?
-      @@music_index = (@@music_index + 1) % @@music.length
-      @current_song = @@music[@@music_index]
-      @current_song.volume = 0.1
-      @current_song.play
-    end
+    #unless @current_song && @current_song.playing?
+    #  @@music_index = (@@music_index + 1) % @@music.length
+    #  @current_song = @@music[@@music_index]
+    #  @current_song.volume = 0.1
+    #  @current_song.play
+    #end
     @parallax_images.each do |parallax_image|
       parallax_image.update camera
     end
   end
   
   def draw
-    @@sky_color.draw 0, -70, 0
+    @@sky_color.draw 0-@@sky_color.width/2.0, -70-@@sky_color.height/2.0, 0, 2.0, 2.0
     
     @parallax_images.each do |parallax_image|
       if $fancy_effects && parallax_image.respond_to?(:haze) && parallax_image.haze > 0.0

@@ -7,6 +7,7 @@ class Characters::Stick1V2::AnimationStates::InAirKickUpRight < Character::State
     @sprite_sheet_id = 'in_air_attack_up'
     @sprite_options = {'factor_x' => -1, 'duration' => @duration, 'mode' => "forward"}
     @movement_options = {'on_surface' => false}
+    @controller_states = ["InAirReactivesRight"]
   end
   
   def on_set options
@@ -24,7 +25,11 @@ class Characters::Stick1V2::AnimationStates::InAirKickUpRight < Character::State
     local_time = time - @state_set_time
        
     if @character.hit_level_down
-      set_state "LandRight", 'start_y' => @character.hit_level_down
+      if local_time < @duration * 0.4
+        set_state "FallToBackRight", 'start_y' => @character.hit_level_down, 'squelch' => true
+      else
+        set_state "LandRight", 'start_y' => @character.hit_level_down
+      end
     else
       if local_time > @duration
         set_state 'InAirRight'

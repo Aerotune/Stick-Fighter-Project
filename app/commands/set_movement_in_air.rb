@@ -21,14 +21,14 @@ class Commands::SetMovementInAir < Command
       
       case prev_movement
       when MovementInLine
-        @start_velocity_x = prev_movement.velocity(@start_time)
-        @terminal_velocity_x = @start_velocity_x
+        @start_velocity_x ||= prev_movement.velocity(@start_time)
+        #@terminal_velocity_x ||= @start_velocity_x
       when MovementInAir
-        @start_velocity_x = prev_movement.velocity_x(@start_time)
-        @terminal_velocity_x = @start_velocity_x
+        @start_velocity_x ||= prev_movement.velocity_x(@start_time)
+        #@terminal_velocity_x ||= @start_velocity_x
       when MovementEasePosition
-        @start_velocity_x = prev_movement.velocity_x(@start_time)
-        @terminal_velocity_x = @start_velocity_x
+        @start_velocity_x ||= prev_movement.velocity_x(@start_time)
+        #@terminal_velocity_x ||= @start_velocity_x
       end
     else
       position = @entity_manager.get_component @entity, Components::Position
@@ -38,6 +38,9 @@ class Commands::SetMovementInAir < Command
       @prev_x = start_x
       @prev_y = start_y
     end
+    
+    @start_velocity_x ||= 0
+    @start_velocity_y ||= 0
     
     @movement = MovementInAir.new \
       'start_time' => @start_time,
