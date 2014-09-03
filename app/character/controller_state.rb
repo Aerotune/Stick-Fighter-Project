@@ -29,6 +29,13 @@ class Character::ControllerState
     
   end
   
+  def set_velocity time, terminal_velocity_x
+    movement = @character.get_component(Components::Movement).movement
+    unless movement.terminal_velocity == terminal_velocity_x
+      @character.time_queue.add time, Commands::SetMovementInLine.new(entity_manager, entity, terminal_velocity_x, time)
+    end
+  end
+  
   def set_in_air_velocity_x time, terminal_velocity_x
     movement = @character.get_component(Components::Movement).movement
     unless movement.terminal_velocity_x == terminal_velocity_x

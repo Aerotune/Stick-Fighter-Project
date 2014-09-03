@@ -25,6 +25,8 @@ class Characters::Stick1V2::AnimationStates::WallIdleRight < Character::State
     elsif @character.hit_level_right
       if @character.current_animation_state.velocity_y(time) > 1400
         set_state "InAirRight"
+      elsif controls.control_down?('move left') && controls.time_since_control_down('move left') > 0.1
+        set_state "InAirRight"
       end
     else
       set_state "InAirRight"

@@ -18,7 +18,7 @@ module Systems::Sprite
 
             sprite.frame = sprite.frames[sprite.index]
           when "backward"
-            sprite.index = sprite.index - sprite_time * sprite.fps
+            sprite.index = sprite.frames.length - 1 - sprite_time * sprite.fps
             if sprite.index < 0
               sprite.index = 0
             end

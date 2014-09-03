@@ -5,7 +5,7 @@ class Characters::Stick1V2::AnimationStates::RunRight < Character::State
     @sprite_sheet_id = 'run_loop'
     @sprite_options = {'factor_x' => -1, 'fps' => 30}
     @movement_options = {'on_surface' => true, 'velocity' => 720}
-    @controller_states = ["StandingAttacksRight", "StandingBalanceNeutralReactivesRight"]
+    @controller_states = ["StandingAttacksRight", "StandingBalanceNeutralReactivesRight", "CanDuckRight"]
   end
   
   def on_set options

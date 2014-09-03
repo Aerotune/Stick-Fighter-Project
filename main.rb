@@ -7,7 +7,7 @@ require_relative 'app/loader'
 class Window < Gosu::Window
   attr_reader :blurs
   def initialize
-    $window = super 1200, 800, false#, 16.6666
+    $window = super 1000, 600, false#, 16.6666
     #$window = super Gosu.screen_width, Gosu.screen_height, true
     @game_state = Loader.new
     
@@ -37,7 +37,7 @@ class Window < Gosu::Window
     @game_state.button_down id if @game_state.respond_to? :button_down
   end
     
-  def button_up id 
+  def button_up id
     @game_state.button_up id if @game_state.respond_to? :button_up
   end
   

@@ -4,6 +4,8 @@ create transition time based on acceleration
 [IN PROGRESS] create timer for controls so you have to  tap right + attack to kick
 magnetize movement so you move in place for the attack
 maybe rework jumping/movement so it's smaller?
+make character stats
+seperate states that handle animations and states that handle movement (in_air, on_surface, and tweens)
 
 
 wanted animations
@@ -14,3 +16,4 @@ USB Apple keyboard does not register all keys when you press down + right + n ??
 Crashes on windows 8?
 Stage reset while running doesn't stop run sound loop
 Some issues with movement and hit testing, refactor please
+If I don't round the hitbox height I start 'falling' while sizing the hitbox down (eg StandToDuck)

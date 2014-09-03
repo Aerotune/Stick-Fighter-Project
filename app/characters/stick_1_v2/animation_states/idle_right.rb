@@ -4,7 +4,7 @@ class Characters::Stick1V2::AnimationStates::IdleRight < Character::State
     @sprite_sheet_id = 'idle'
     @sprite_options = {'factor_x' => -1}
     @movement_options = {'on_surface' => true, 'velocity' => 0}
-    @controller_states = ["StandingAttacksRight", "StandingBalanceNeutralReactivesRight"]
+    @controller_states = ["StandingAttacksRight", "StandingBalanceNeutralReactivesRight", "CanDuckRight"]
     
     @state_triggers = {
       'control_down' => {

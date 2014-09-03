@@ -124,7 +124,7 @@ class Stage
     distance = 9000.0 if distance > 6000.0
     zoom_out = ((distance)/16000.0)**0.1 * (1000.0 / $window.width)
     zoom_out = 0.85 if zoom_out > 0.85
-    zoom =  1.0 - zoom_out# * 0.9
+    zoom =  1.05 - zoom_out# * 0.9
     #zoom = 0.15 if zoom < 0.15
     #zoom = 1.0 if zoom > 1.0
     

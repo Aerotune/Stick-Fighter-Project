@@ -7,8 +7,6 @@ class Characters::Stick1V2::ControllerStates::StandingAttacksLeft < Character::C
       else
         set_state "PunchLeft"
       end
-    when 'move down'
-      set_state "StandToDuckLeft"
     end
   end
 end

@@ -24,6 +24,10 @@ class Characters::Stick1V2::AnimationStates::RunningAttackRight < Character::Sta
     ease_position 'distance' => 190, 'transition_time' => 0.35, 'start_time' => @character.time
   end
   
+  def on_unset
+    remove_punch_hit_box
+  end
+  
   def update_game_logic time
     return set_state "InAirRight" unless @character.hit_level_down
     

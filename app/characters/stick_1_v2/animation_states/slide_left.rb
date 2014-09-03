@@ -6,7 +6,7 @@ class Characters::Stick1V2::AnimationStates::SlideLeft < Character::State
     @sprite_sheet_id = 'slide'
     @sprite_options = {'factor_x' => 1, 'duration' => @duration, 'mode' => 'forward'}
     @movement_options = {'on_surface' => true, 'velocity' => 0}
-    @controller_states = ["StandingBalanceNeutralReactivesLeft"]
+    @controller_states = ["StandingBalanceNeutralReactivesLeft", "CanDuckLeft"]
   end
   
   def control_down control

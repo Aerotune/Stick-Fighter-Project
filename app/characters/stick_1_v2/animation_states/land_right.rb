@@ -5,7 +5,7 @@ class Characters::Stick1V2::AnimationStates::LandRight < Character::State
     @sprite_sheet_id = 'land'
     @sprite_options = {'factor_x' => -1, 'duration' => @duration}
     @movement_options = {'on_surface' => true, 'velocity' => 0}
-    @controller_states = ["StandingBalanceNeutralReactivesRight"]
+    @controller_states = ["StandingBalanceNeutralReactivesRight", "CanDuckRight"]
   end
   
   def on_set options
