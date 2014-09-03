@@ -216,8 +216,7 @@ class Stage
           hit_y = (top + 50 .. bottom - 50).overlaps?(object.top..object.bottom)
           hit_left  = hit_y && (object_middle..object.right) === next_left
           hit_right = hit_y && (object.left..object_middle) === next_right
-        end
-        
+        end        
         
         player.hit_level_down = object.top    if hit_down
         player.hit_level_up   = object.bottom if hit_up

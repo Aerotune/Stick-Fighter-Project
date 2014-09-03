@@ -52,6 +52,8 @@ class Characters::Stick1V2::AnimationStates::JumpRight < Character::State
   def update_game_logic time
     local_time = time - @state_set_time
     
+    return set_state "LandRight", 'start_y' => @character.hit_level_down if @character.hit_level_down
+    
     case controls.latest_horizontal_move
     when 'move right'
       set_in_air_velocity_x time, 720

@@ -12,6 +12,7 @@ class Commands::RemoveVelocityY < Command
     if movement_component
       @prev_movement = movement_component.movement
       
+      position.y = @options['start_y'] if @options['start_y']
       position.next_y = @options['start_y'] if @options['start_y']
       
       case @prev_movement

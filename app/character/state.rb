@@ -11,8 +11,8 @@ class Character::State
   
   def update_collision_game_logic time
     if @character.hit_level_up
-      hit_box_height = 185
-      @character.time_queue.add time, Commands::RemoveVelocityY.new(entity_manager, entity, time, 'start_y' => @character.hit_level_up+hit_box_height+10)
+      hit_box = @character.get_component(Components::HitBox)
+      @character.time_queue.add time, Commands::RemoveVelocityY.new(entity_manager, entity, time, 'start_y' => @character.hit_level_up+hit_box.height+1)
     else
       if @character.hit_level_right
         @character.time_queue.add time, Commands::RemoveVelocity.new(entity_manager, entity, time, 'start_x' => @character.hit_level_right)
