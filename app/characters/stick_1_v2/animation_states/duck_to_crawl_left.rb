@@ -4,8 +4,8 @@ class Characters::Stick1V2::AnimationStates::DuckToCrawlLeft < Character::State
     @sprite_sheet_id = 'duck_to_crawl'
     @duration = 0.2
     @sprite_options = {'factor_x' => 1, 'duration' => @duration, 'mode' => 'forward'}
-    @movement_options = {'on_surface' => true, 'velocity' => -520}
-    @controller_states = ["DuckingReactivesLeft"]
+    @movement_options = {'on_surface' => true, 'velocity' => -380}
+    @controller_states = ["DuckingReactivesLeft", "DuckingActivesLeft"]
   end
   
   def on_unset
@@ -26,7 +26,7 @@ class Characters::Stick1V2::AnimationStates::DuckToCrawlLeft < Character::State
     
     case controls.latest_horizontal_move
     when 'move left'
-      set_velocity time, -520
+      set_velocity time, -380
     else
       set_velocity time, 0
     end

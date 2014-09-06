@@ -9,6 +9,10 @@ class Characters::Stick1V2::ControllerStates::StandingBalanceForwardReactivesLef
       end
     when 'right'
       set_state "PunchedFrontLeft"
+    when 'up'
+      set_state "KnockupLeft"
+    when 'down'
+      set_state "SlammedLeft"
     end
   end
 end

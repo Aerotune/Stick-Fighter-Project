@@ -5,7 +5,7 @@ class Characters::Stick1V2::AnimationStates::StandToDuckLeft < Character::State
     @duration = 0.35
     @sprite_options = {'factor_x' => 1, 'duration' => 0.3, 'mode' => 'forward'}
     @movement_options = {'on_surface' => true, 'velocity' => 0}
-    @controller_states = ["DuckingReactivesLeft", "OnSurfaceMovement"]
+    @controller_states = ["DuckingReactivesLeft", "OnSurfaceMovement", "DuckingActivesLeft"]
   end
   
   

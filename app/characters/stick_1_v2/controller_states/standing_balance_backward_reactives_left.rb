@@ -9,6 +9,10 @@ class Characters::Stick1V2::ControllerStates::StandingBalanceBackwardReactivesLe
       else
         set_state "FallToBackLeft"
       end
+    when 'up'
+      set_state "KnockupLeft"
+    when 'down'
+      set_state "SlammedLeft"
     end
   end
 end

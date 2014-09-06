@@ -44,11 +44,7 @@ class Stage::Level::Box
       #draw_top_side
       draw_sides
       draw_bottom_side
-    end
-    
-    
-    
-    
+    end    
     
     # Front side
     $window.draw_quad \

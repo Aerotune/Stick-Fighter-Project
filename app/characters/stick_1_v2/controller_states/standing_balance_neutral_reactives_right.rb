@@ -21,6 +21,10 @@ class Characters::Stick1V2::ControllerStates::StandingBalanceNeutralReactivesRig
       else
         set_state "PunchedBehindRight"
       end
+    when 'up'
+      set_state "KnockupRight"
+    when 'down'
+      set_state "SlammedRight"
     end
   end
 end

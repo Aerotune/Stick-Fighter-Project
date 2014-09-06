@@ -5,7 +5,9 @@ module Factories::PunchHitBox
     offset = options['offset_x'] || 10
     case hit_direction
     when "right"; offset_x = offset
-    when "left";  offset_x = -(offset + width)      
+    when "left";  offset_x = -(offset + width)
+    when "down"; offset_x  = options['offset_x'] || 0
+    when "up"; offset_x = options['offset_x'] || 0
     end
     offset_y = options['offset_y'] || -151
     strength = options['strength'] || 1.0

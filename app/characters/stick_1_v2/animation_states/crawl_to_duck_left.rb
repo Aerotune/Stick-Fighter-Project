@@ -5,7 +5,7 @@ class Characters::Stick1V2::AnimationStates::CrawlToDuckLeft < Character::State
     @duration = 0.2
     @sprite_options = {'factor_x' => 1, 'duration' => @duration, 'mode' => 'backward'}
     @movement_options = {'on_surface' => true, 'velocity' => 0}
-    @controller_states = ["DuckingReactivesLeft"]
+    @controller_states = ["DuckingReactivesLeft", "DuckingActivesLeft"]
   end
   
   def on_unset

@@ -3,8 +3,8 @@ class Characters::Stick1V2::AnimationStates::CrawlRight < Character::State
     @character = character
     @sprite_sheet_id = 'crawl'
     @sprite_options = {'factor_x' => -1, 'fps' => 30}
-    @movement_options = {'on_surface' => true, 'velocity' => 520}
-    @controller_states = ["DuckingReactivesRight"]
+    @movement_options = {'on_surface' => true, 'velocity' => 380}
+    @controller_states = ["DuckingReactivesRight", "DuckingActivesRight"]
   end
   
   def on_unset
@@ -28,7 +28,7 @@ class Characters::Stick1V2::AnimationStates::CrawlRight < Character::State
     
     case controls.latest_horizontal_move
     when 'move right'
-      set_velocity time, 520
+      set_velocity time, 380
     when 'move left'
       set_state "CrawlToDuckRight"
     else

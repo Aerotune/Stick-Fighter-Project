@@ -11,7 +11,7 @@ class Characters::Stick1V2::AnimationStates::InAirDizzyRight < Character::State
   
   def on_set options
     @dizzy_duration = options['strength'] * @duration
-    SoundResource.play 'punched'
+    SoundResource.play 'punched' unless options['squelch']
   end
   
   def update_game_logic time 

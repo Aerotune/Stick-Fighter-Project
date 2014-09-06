@@ -46,12 +46,12 @@ class Stage::Background
   end
   
   def update camera
-    #unless @current_song && @current_song.playing?
-    #  @@music_index = (@@music_index + 1) % @@music.length
-    #  @current_song = @@music[@@music_index]
-    #  @current_song.volume = 0.1
-    #  @current_song.play
-    #end
+    unless @current_song && @current_song.playing?
+      @@music_index = (@@music_index + 1) % @@music.length
+      @current_song = @@music[@@music_index]
+      @current_song.volume = 0.1
+      @current_song.play
+    end
     @parallax_images.each do |parallax_image|
       parallax_image.update camera
     end

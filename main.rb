@@ -35,7 +35,7 @@ class Window < Gosu::Window
       $show_hit_boxes = !$show_hit_boxes
     end
     @game_state.button_down id if @game_state.respond_to? :button_down
-  end
+  end 
     
   def button_up id
     @game_state.button_up id if @game_state.respond_to? :button_up

@@ -12,6 +12,7 @@ class Characters::Stick1V2::AnimationStates::InAirKickUpLeft < Character::State
   
   def on_set options
     set_in_air_transition_time_y @character.time, 3.0
+    @has_hit_box = false
   end
   
   def control_down control
@@ -34,6 +35,11 @@ class Characters::Stick1V2::AnimationStates::InAirKickUpLeft < Character::State
     else
       if local_time > @duration
         set_state 'InAirLeft'
+      elsif local_time > @duration * 0.6 && @has_hit_box
+        remove_punch_hit_box
+      elsif local_time > @duration * 0.4 && !@has_hit_box
+        @has_hit_box = true
+        create_punch_hit_box 'up', 'strength' => 2.0, 'width' => 80, 'offset_x' => -40, 'offset_y' => -270, 'height' => 100
       else
         case controls.latest_horizontal_move
         when 'move right'

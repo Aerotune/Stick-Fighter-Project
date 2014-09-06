@@ -9,6 +9,10 @@ class Characters::Stick1V2::ControllerStates::StandingBalanceBackwardReactivesRi
       else
         set_state "FallToBackRight"
       end
+    when 'up'
+      set_state "KnockupRight"
+    when 'down'
+      set_state "SlammedRight"
     end
   end
 end

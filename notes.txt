@@ -6,7 +6,7 @@ magnetize movement so you move in place for the attack
 maybe rework jumping/movement so it's smaller?
 make character stats
 seperate states that handle animations and states that handle movement (in_air, on_surface, and tweens)
-
+make it so you can't stand up while ducking under something
 
 wanted animations
 tap down + attack = swipe

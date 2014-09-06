@@ -13,10 +13,23 @@ class Characters::Stick1V2::AnimationStates::InAirAttackDownLeft < Character::St
   def on_set options
     #set_in_air_transition_time_y @character.time, 2.0
     @landed = false
+    @has_hit_box = false
+  end
+  
+  def on_unset
+    remove_punch_hit_box
   end
   
   def update_game_logic time 
     local_time = time - @state_set_time
+    
+    if local_time > @duration * 0.7 && @has_hit_box
+      remove_punch_hit_box
+    end
+    if local_time > @duration * 0.4 && !@has_hit_box
+      @has_hit_box = true
+      create_punch_hit_box 'down', 'strength' => 2.0, 'width' => 100, 'offset_x' => -50, 'offset_y' => -70
+    end
        
     if @character.hit_level_down
       if local_time > @duration

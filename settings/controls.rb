@@ -44,7 +44,7 @@ class Controls
     if control_down_time
       Time.now.to_f - control_down_time
     else
-      -Infinity
+      Infinity
     end
   end
   
