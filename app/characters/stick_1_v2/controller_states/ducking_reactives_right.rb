@@ -5,6 +5,10 @@ class Characters::Stick1V2::ControllerStates::DuckingReactivesRight < Character:
       set_state "FallToStomachRight"
     when 'left'
       set_state "FallToBackRight"
+    when 'up'
+      set_state "KnockupRight"
+    when 'down'
+      set_state "SlammedRight"
     end
   end
 end

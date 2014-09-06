@@ -20,7 +20,7 @@ class Characters::Stick1V2::AnimationStates::UppercutLeft < Character::State
     else
       if local_time > @duration * 0.25
         @has_punched = true
-        create_punch_hit_box 'up', 'strength' => 1.0, 'offset_x' => -80, 'offset_y' => -220, 'width' => 120, 'height' => 120
+        create_punch_hit_box 'up', 'strength' => 1.0, 'offset_x' => -80, 'offset_y' => -220, 'width' => 120, 'height' => 220
       end
     end
     
