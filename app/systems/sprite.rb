@@ -75,7 +75,7 @@ module Systems::Sprite
               center_x = sprite.center_x.to_f * sprite.factor_x
               center_y = sprite.center_y.to_f
               
-              screen_x = @vanishing_point_x + (anchor_x - center_x + sprite.frame['offset_x'].to_i - camera.x) * @parallax_factor * camera.zoom
+              screen_x = @vanishing_point_x + (anchor_x - center_x + sprite.frame['offset_x'].to_i* sprite.factor_x - camera.x) * @parallax_factor * camera.zoom
               screen_y = @vanishing_point_y + (anchor_y - center_y + sprite.frame['offset_y'].to_i - camera.y) * @parallax_factor * camera.zoom
               z = ZOrder::CHARACTER
               angle = 0
